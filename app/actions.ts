@@ -53,7 +53,7 @@ export const signInAction = async (formData: FormData) => {
     return encodedRedirect("error", "/sign-in", error.message);
   }
 
-  return redirect("/protected");
+  return redirect("/");
 };
 
 export const forgotPasswordAction = async (formData: FormData) => {
@@ -132,3 +132,18 @@ export const signOutAction = async () => {
   await supabase.auth.signOut();
   return redirect("/sign-in");
 };
+
+export const fetchRand = async () => {
+  const supabase = await createClient();
+  
+let { data: Rand, error } = await supabase
+.from('Rand')
+.select('text')
+
+  if(error){
+    console.error(error.cause);
+    return null;
+  }
+
+  return Rand;
+}

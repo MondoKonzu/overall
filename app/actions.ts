@@ -6,6 +6,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 export const signUpAction = async (formData: FormData) => {
+  const username = formData.get("username")?.toString();
   const email = formData.get("email")?.toString();
   const password = formData.get("password")?.toString();
   const supabase = await createClient();
@@ -24,6 +25,9 @@ export const signUpAction = async (formData: FormData) => {
     password,
     options: {
       emailRedirectTo: `${origin}/auth/callback`,
+      data: {
+        display_name: username
+      }
     },
   });
 
@@ -133,17 +137,17 @@ export const signOutAction = async () => {
   return redirect("/sign-in");
 };
 
-export const fetchRand = async () => {
+export const fetchPlayers = async () => {
   const supabase = await createClient();
   
-let { data: Rand, error } = await supabase
-.from('Rand')
-.select('text')
+let { data: players, error } = await supabase
+.from('player')
+.select('name')
 
   if(error){
     console.error(error.cause);
     return null;
   }
 
-  return Rand;
+  return players;
 }

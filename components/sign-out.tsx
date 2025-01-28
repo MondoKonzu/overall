@@ -6,8 +6,8 @@ import HeaderAuth from './header-auth'
 const SignOut = () => {
   return (
     <>
-    <Button onClick={signOutAction}>Sign out</Button>
     <HeaderAuth />
+    <Button onClick={signOutAction}>Sign out</Button>
     </>
   )
 }

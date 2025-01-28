@@ -1,12 +1,11 @@
 
 import { hasEnvVars } from "@/utils/supabase/check-env-vars";
 import { Geist } from "next/font/google";
-import { ThemeProvider } from "@/components/theme-provider";
 import Link from "next/link";
 import "./globals.css";
 import { ModeToggle } from "@/components/ui/mode-toggle";
 import SignOut from "@/components/sign-out";
-import HeaderAuth from "@/components/header-auth";
+import { ThemeProvider } from "@/components/theme-provider"
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -41,7 +40,6 @@ export default function RootLayout({
                   <div className="flex gap-5 items-center font-semibold">
                     <Link href={"/"}>Next.js Supabase Starter</Link>
                     <SignOut />
-                    <HeaderAuth />
                       <div className="flex items-center gap-2">
                     </div>
                   </div>

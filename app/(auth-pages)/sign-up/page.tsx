@@ -1,4 +1,4 @@
-import { signUpAction } from "@/app/actions";
+import { signUpAction } from "@/lib/actions";
 import Link from "next/link";
 import { SmtpMessage } from "../smtp-message";
 import { Label } from "@/components/ui/label";

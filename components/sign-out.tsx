@@ -13,7 +13,7 @@ const SignOut = async () => {
     <>
     <HeaderAuth />
     {hasEnvVars && user ? 
-    <Button variant={'outline'} onClick={signOutAction}>Sign out</Button>  
+    <Button variant={'cyber'} onClick={signOutAction}>Sign out</Button>  
       :
       null
   }

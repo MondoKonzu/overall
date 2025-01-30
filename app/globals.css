@@ -67,3 +67,18 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer components {
+  .cyber-card{
+    clip-path: polygon(10% 0%, 0% 10%, 0% 100%, 90% 100%, 100% 90%, 100% 0%) !important;
+  }
+
+  .cyber-card:hover span{
+    width: 100%;
+  }
+
+  .btncy{
+    @apply bg-inherit bg-amber-400 hover:bg-red-500 duration-300 !rounded-none;
+    clip-path: polygon(0% 100%, 20% 0%, 100% 0%, 80% 100%) !important;
+  }
+}

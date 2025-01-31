@@ -13,7 +13,7 @@ const CyberCard = ({children, title} : {children: React.ReactNode, title: string
     });
   return (
     <div 
-        className={`min-h-[70vh] min-w-full bg-[url(public/cyberland.png)] bg-cover grayscale hover:grayscale-0 duration-300 cyber-card`}
+        className={`min-h-[70vh] min-w-full bg-[url(/cyberland.png)] bg-cover grayscale hover:grayscale-0 duration-300 cyber-card`}
         ref={glitch.ref}
         >
         <div className='

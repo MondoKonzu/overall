@@ -6,6 +6,7 @@ import "./globals.css";
 import { ModeToggle } from "@/components/ui/mode-toggle";
 import SignOut from "@/components/sign-out";
 import { ThemeProvider } from "@/components/theme-provider"
+import Navigate from "@/components/navigate";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -36,19 +37,20 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <main className="min-h-screen flex flex-col items-center">
-              <nav className="w-full flex justify-center border-b border-b-foreground/10 h-12">
+          {/* <main className="min-h-screen flex flex-col items-center"> */}
+              {/* <nav className="w-full flex justify-center border-b border-b-foreground/10 h-12">
                 <div className="w-full max-w-5xl flex justify-between items-center p-3 px-5 text-sm">
                   <div className="flex gap-5 items-center font-semibold">
                     <SignOut />
                     <ModeToggle />
                   </div>
                 </div>
-              </nav>
+              </nav> */}
+              <Navigate />
               <div className="w-full">
                 {children}
               </div>
-          </main>
+          {/* </main> */}
         </ThemeProvider>
       </body>
     </html>

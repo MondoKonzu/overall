@@ -1,6 +1,7 @@
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import FormInsertBuild from "@/components/fromBuilding";
+import Usercard from "@/components/usercard";
 
 export default async function ProtectedPage() {
   const supabase = await createClient();
@@ -14,6 +15,8 @@ export default async function ProtectedPage() {
 
 
   return (
-    <FormInsertBuild />
+    <div>
+      <Usercard></Usercard>
+    </div>
   );
 }

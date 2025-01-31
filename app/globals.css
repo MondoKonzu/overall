@@ -78,7 +78,13 @@
   }
 
   .btncy{
-    @apply bg-inherit bg-amber-400 hover:bg-red-500 duration-300 !rounded-none;
-    clip-path: polygon(0% 100%, 20% 0%, 100% 0%, 80% 100%) !important;
+    @apply bg-inherit bg-amber-400 hover:bg-red-500 duration-300 !rounded-none min-w-[9rem];
+    clip-path: polygon(0% 0%,84% 0%, 100% 50%, 100% 100%, 18% 100%, 0% 44%) !important;
+  }
+}
+
+@layer utilities {
+  .btn-cutedge-1{
+    clip-path: polygon(0% 0%,84% 0%, 100% 50%, 100% 100%, 18% 100%, 0% 44%) !important;
   }
 }

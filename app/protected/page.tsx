@@ -28,11 +28,13 @@ export default async function ProtectedPage() {
 const CampaignInfo = async () => {
   const campaigns = await fetchCampaignDmUser();
   return (
-    <div className="border p-4 rounded">
+    <div className="border p-4 rounded-xl bg-slate-900/50 backdrop-blur-md">
       <div>
         <h3>Campagne di cui sei Master</h3>
         {campaigns.map(campaign => 
-          <Link href={`/protected/campaign/${campaign.id}`} key={campaign.id}>{campaign.name} </Link>
+          <Link href={`/protected/campaign/${campaign.id}`} key={campaign.id}>
+            {campaign.name}
+          </Link>
         )}
       </div>
           <form className="grid gap-4 mt-8">
@@ -43,7 +45,7 @@ const CampaignInfo = async () => {
         placeholder="FireCity"
         required  
       />
-      <Button variant={"outline"} formAction={insertCampaign}>Submit</Button>
+      <Button variant={"outline"} formAction={insertCampaign}>Create campaign</Button>
     </form>
     </div>
   )

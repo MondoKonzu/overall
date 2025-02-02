@@ -2,6 +2,7 @@
 
 import { createClient } from "@/utils/supabase/server"
 import { redirect } from "next/navigation";
+import { fetchThisUser } from "./data-fetcher";
 
 export const insertBuilding = async (formData : FormData) : Promise<any> => {
     const supabase = await createClient();
@@ -28,10 +29,11 @@ export const insertBuilding = async (formData : FormData) : Promise<any> => {
   ])
   .select()
 
-  if(error){
-    return redirect("/nobuono")
-  }
-  return redirect("/buono")
+//   if(error){
+//     return redirect("/nobuono")
+//   }
+//   return redirect("/buono")
+
 }
 
 //returns an array of [price, earn] for the building
@@ -49,6 +51,11 @@ const getBuildingRow = async (typename : string) => {
     return [typerow[0].price, typerow[0].earn];
 }
 
+/**
+ * 
+ * @param typename the name of the type of building
+ * @returns the id corrisponding to that name 
+ */
 const getIdbyTypeName = async (typename : string) => {
     const supabase = await createClient();
     const { data : row, error} = await supabase
@@ -70,4 +77,24 @@ const getMultuplierRow = async (size : string) => {
     if(error || !sizerow) { return null}
 
     return sizerow[0].multiplier;
+}
+
+/**
+ * Create a new campaign in the DB
+ * 
+ * @param formData campaign name
+ */
+export const insertCampaign = async (formData : FormData) : Promise<any> => {
+    const user = await fetchThisUser();
+    const name = formData.get("name")?.toString();
+    if(!user || !name) { return null }
+
+    const supabase = await createClient();
+    const { data: campaign, error } = await supabase
+    .from("campaign")
+    .insert([
+        { name: name, masterID: user.id },
+      ])
+    
+    if(error) return redirect("/error")
 }

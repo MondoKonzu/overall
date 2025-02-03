@@ -47,7 +47,7 @@ export default function RootLayout({
                 </div>
               </nav> */}
               <Navigate />
-              <div className="w-full">
+              <div className="w-full pt-12">
                 {children}
               </div>
           {/* </main> */}

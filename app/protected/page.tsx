@@ -1,11 +1,13 @@
 import { redirect } from "next/navigation";
 import Usercard from "@/components/usercard";
-import { fetchPlayers, fetchUserPlayers, fetchThisUser, fetchCampaignDmUser } from "@/lib/data-fetcher";
+import { fetchPlayers, fetchUserPlayers, fetchThisUser, fetchCampaignDmUser, fetchCampaigns } from "@/lib/data-fetcher";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { insertCampaign } from "@/lib/data-insert";
 import Link from "next/link";
+import CampaingsTable from "@/components/camp-table";
+import ErrorComponent from "@/components/error-comp";
 
 export default async function ProtectedPage() {
   const user = await fetchThisUser();
@@ -17,15 +19,16 @@ export default async function ProtectedPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-t from-violet-500/50 via-violet-500/25 to-transparent">
-      <div className="grid grid-cols-3 p-16">
+      <div className="grid grid-cols-3 px-16">
         <Usercard/>
-        <CampaignInfo />
+        <CampaignDmInfo />
+        <CampsJoin />
       </div>
     </div>
   );
 }
 
-const CampaignInfo = async () => {
+const CampaignDmInfo = async () => {
   const campaigns = await fetchCampaignDmUser();
   return (
     <div className="border p-4 rounded-xl bg-slate-900/50 backdrop-blur-md">
@@ -49,4 +52,10 @@ const CampaignInfo = async () => {
     </form>
     </div>
   )
+}
+
+const CampsJoin = async () => {
+  const camps = await fetchCampaigns()
+  if(camps == null) return <ErrorComponent/>
+  return <CampaingsTable camps={camps} />
 }

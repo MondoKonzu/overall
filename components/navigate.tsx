@@ -30,11 +30,11 @@ const Navigate = () => {
               <br />
                 <BtnNav linkTo='/protected' onClick={handleClick}>My Profile</BtnNav>
                 <BtnNav linkTo='/' onClick={handleClick}>Home</BtnNav>
+                <BtnNav linkTo='/sign-in' onClick={handleClick}>Sign-in</BtnNav>
                 <BtnNav linkTo='/' onClick={() => {
                   signOutAction();
                   handleClick();
                 }}>Sign Out</BtnNav>
-                <BtnNav linkTo='/sign-in' onClick={handleClick}>Sign-in</BtnNav>
             </div>
           </div>
       </div>

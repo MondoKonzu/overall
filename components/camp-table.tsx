@@ -17,8 +17,10 @@ const CampaingsTable = ({camps} : {camps : any[]}) => {
                 setSearch(e.target.value);
             }}/>
         </div>
-        <ScrollArea className='w-full bg-slate-700 p-2 rounded-lg grid gap-2 min-h-16 max-h-[20vh]'>
-            {findCamps(search, camps)}
+        <ScrollArea className='p-4 max-h-[25vh]'>
+            <div className='w-full bg-slate-700 p-2 rounded-lg grid gap-2 min-h-16'>
+                {findCamps(search, camps)}
+            </div>
         </ScrollArea>
     </div>
   )

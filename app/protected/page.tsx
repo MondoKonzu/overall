@@ -8,6 +8,7 @@ import { insertCampaign } from "@/lib/data-insert";
 import Link from "next/link";
 import CampaingsTable from "@/components/camp-table";
 import ErrorComponent from "@/components/error-comp";
+import Tabs from "@/components/tabs";
 
 export default async function ProtectedPage() {
   const user = await fetchThisUser();
@@ -18,13 +19,15 @@ export default async function ProtectedPage() {
 
 
   return (
-    <div className="min-h-screen bg-gradient-to-t from-violet-500/50 via-violet-500/25 to-transparent">
-      <div className="grid grid-cols-3 px-16">
-        <Usercard/>
-        <CampaignDmInfo />
-        <CampsJoin />
+      <div className="px-16">
+        <Tabs>
+          {[
+            { trigger: "User Info", body: <Usercard/>},
+            { trigger: "Le tue campagne", body: <CampaignDmInfo />},
+            { trigger: "Entra in nuove campagne", body: <CampsJoin />},
+          ]}
+        </Tabs>
       </div>
-    </div>
   );
 }
 

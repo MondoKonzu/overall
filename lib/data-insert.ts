@@ -3,6 +3,7 @@
 import { createClient } from "@/utils/supabase/server"
 import { redirect } from "next/navigation";
 import { fetchThisUser } from "./data-fetcher";
+import { Palanquin } from "next/font/google";
 
 export const insertBuilding = async (formData : FormData) : Promise<any> => {
     const supabase = await createClient();
@@ -97,4 +98,42 @@ export const insertCampaign = async (formData : FormData) : Promise<any> => {
       ])
     
     if(error) return redirect("/error")
+}
+
+export const insertPlayerRequest = async (formData: FormData,) : Promise<any> => {
+    const name = formData.get("name")?.toString();
+    const eddie = formData.get("eddie")?.toString();
+    const campID = formData.get("campID")?.toString();
+    const user = await fetchThisUser();
+    if(!user) return redirect ("/sign-in");
+    const supabase = await createClient();
+    const {data, error} = await supabase
+    .from("player")
+    .insert([
+        {"userID": user.id,
+            "name": name,
+            "eddie": eddie,
+            "campaignID": null,
+         },
+    ]).select();
+
+    if(error) return null;
+
+    insertPending(campID!, data[0].id)
+}
+
+const insertPending = async (campID : string, playerID : string) => {
+    const supabase = await createClient();
+    
+    const { data, error } = await supabase
+    .from('pending')
+    .insert([
+      { "campaingID": campID, "playerID": playerID },
+    ])
+    .select();
+    if(error){
+        console.log(error)
+    }else{
+        console.log(data)
+    }
 }

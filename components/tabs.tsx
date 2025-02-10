@@ -5,10 +5,16 @@ import React, { useState } from 'react'
 export type Tab = {
     trigger : string | React.ReactNode;
     body : React.ReactNode;
+    isActive?: boolean;
 }
 
 const Tabs = ({children} : {children : Tab[]}) => {
-    const [activeTab, setActiveTab] = useState<number | null>(0);
+    const getActive = () : number => {
+        let ans = children.findIndex(item => item.isActive);
+        ans == -1 && (ans = 0);
+        return ans;
+    }
+    const [activeTab, setActiveTab] = useState<number | null>(getActive);
     const tabChange = (e : HTMLElement) => {
         let tn : any = e.getAttribute("data-tab");
         tn = parseInt(tn!);
@@ -30,6 +36,7 @@ const Tabs = ({children} : {children : Tab[]}) => {
             {children.filter((trig, index) => index == activeTab)
                 .map((trig ,index) =>
                         <div 
+                            className='rounded-lg border p-2'
                             data-tab={index}
                             key={index}
                         >

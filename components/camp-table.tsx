@@ -31,7 +31,7 @@ export default CampaingsTable
 const findCamps = (search : string, camps: any[]) => {
     const res = camps.filter((camp) => camp.name.toLowerCase().includes(search.toLowerCase())).map(item =>
         <Link 
-            href={`/protected/joincampaign/${item.id}`} key={item.id}
+            href={`/protected/campaign/${item.id}`} key={item.id}
         >
             <div 
             className='rounded-lg bg-slate-800 !w-full p-4'

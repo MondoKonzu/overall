@@ -19,7 +19,7 @@ const CyberCard = ({children, title} : {children: React.ReactNode, title: string
         <div className='
         min-w-full min-h-full bg-gradient-to-t from-yellow-600 via-yellow-500/50 to-transparent
         gird content-end'>
-            <div className='grid p-6'>
+            <div className='grid p-6 min-h-[70vh] content-end'>
             <span className='inline-block h-1 bg-purple-700 w-[25%] rounded hover duration-300'></span>
             <h1 className='text-3xl'>{title}</h1>
             <p className='font-mono'>{children}</p>

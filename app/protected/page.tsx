@@ -23,8 +23,8 @@ export default async function ProtectedPage() {
         <Tabs>
           {[
             { trigger: "User Info", body: <Usercard/>},
-            { trigger: "Le tue campagne", body: <CampaignDmInfo />, isActive: true},
-            { trigger: "Entra in nuove campagne", body: <CampsJoin />},
+            { trigger: "Le tue campagne", body: <CampaignDmInfo />},
+            { trigger: "Entra in nuove campagne", body: <CampsJoin />,isActive: true},
           ]}
         </Tabs>
       </div>
@@ -59,5 +59,10 @@ const CampaignDmInfo = async () => {
 const CampsJoin = async () => {
   const camps = await fetchCampaigns()
   if(camps == null) return <ErrorComponent/>
-  return <CampaingsTable camps={camps} />
+  return (
+    <div className="grid grid-cols-2">
+      <CampaingsTable camps={camps} />
+      <div></div>
+    </div>
+  )
 }

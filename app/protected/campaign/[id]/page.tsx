@@ -41,21 +41,42 @@ export default async function Page({
     }
 
     if(ava == -1) {
-        return <div className="p-12">
-            <h2>You are not a player for this campaign</h2>
-            <p>do you want to join?</p>
-            <FormPlayer campID={id}/>
-        </div>
+        return <NewUser campID={id} />
+    }else if(ava == 0){
+        return<Player campaign={campaign} players={players}/>
     }else{
+        return <DM/>
+    }
+  }
+
+const NewUser = ({campID} : {campID : string}) => {
+    return (
+    <div className="p-12">
+        <h2>You are not a player for this campaign</h2>
+        <p>do you want to join?</p>
+        <FormPlayer className="mt-8" campID={campID}/>
+    </div>
+    )
+}
+
+const Player = ({players, campaign} : {players: any[] | null, campaign: any}) => {
     return (
         <div className="p-12">
-            <h1>Campaign's name: {campaign.name}</h1>
-            <div>
-                <h3>Campaign's players:</h3>
-                {players!.map(player =>
-                    <p>{player.name}</p>
-                )}
-            </div>
+        <h1>Campaign's name: {campaign.name}</h1>
+        <div>
+            <h3>Campaign's players:</h3>
+            {players!.map(player =>
+                <p>{player.name}</p>
+            )}
         </div>
-    )}
-  }
+    </div>
+    )
+}
+
+const DM = () => {
+    return (
+        <div>
+        Welcome DM
+    </div>
+    )
+}

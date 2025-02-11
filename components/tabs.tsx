@@ -26,7 +26,7 @@ const Tabs = ({children} : {children : Tab[]}) => {
             {children.map((trig, index) => 
             <div
                 className={`rounded py-1 px-1.5 cursor-pointer 
-                    ${activeTab ==index && "dark:bg-slate-700"}`}
+                    ${activeTab ==index && "dark:bg-slate-700 bg-gray-200"}`}
                 data-tab={index}
                 key={index}
                 onClick={(e) => {tabChange(e.currentTarget)}}       

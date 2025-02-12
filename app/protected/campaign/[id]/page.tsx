@@ -1,7 +1,9 @@
 "use server"
 
 import FormPlayer from "@/components/formPlayer";
-import { fetchCampaignByID, fetchCampaignPlayers, fetchThisUser } from "@/lib/data-fetcher"
+import { fetchPlayers } from "@/lib/data-fetcher";
+import { fetchCampaignByID, fetchCampaignPending, fetchCampaignPlayers, fetchThisUser, fetchUserPlayers } from "@/lib/data-fetcher"
+import { User } from "@supabase/supabase-js";
 import { redirect } from "next/navigation";
 
 /**
@@ -41,22 +43,45 @@ export default async function Page({
     }
 
     if(ava == -1) {
-        return <NewUser campID={id} />
+        return <NewUser campID={id} user={user}/>
     }else if(ava == 0){
         return<Player campaign={campaign} players={players}/>
     }else{
-        return <DM/>
+        return <DM campID={campaign!.id}/>
     }
   }
 
-const NewUser = ({campID} : {campID : string}) => {
-    return (
-    <div className="p-12">
-        <h2>You are not a player for this campaign</h2>
-        <p>do you want to join?</p>
-        <FormPlayer className="mt-8" campID={campID}/>
-    </div>
-    )
+const NewUser = async ({campID, user} : {campID : string, user: User}) => {
+    let alreadyInList = undefined;
+    const pendings = await fetchCampaignPending(campID);
+    const players = await fetchUserPlayers(user.id);
+    if(pendings != null && players != null){
+        pendings.forEach(pend =>
+            alreadyInList = players.find(pg => pend.playerID == pg.id)
+        )
+    }
+    if(alreadyInList === undefined){
+        return (
+            <div className="p-12">
+                <h2>You are not a player for this campaign</h2>
+                <p>do you want to join?</p>
+                <FormPlayer className="mt-8" campID={campID}/>
+            </div>
+        )
+    }else{
+        return(
+        <div>
+            <h2 className="text-3xl">A request was already sent</h2>
+            <p>Now wait for the DM to accept it</p>
+            <h3 className="text-xl">PG:</h3>
+            {
+                alreadyInList
+            }
+        </div>
+        )
+    }
+
+
 }
 
 const Player = ({players, campaign} : {players: any[] | null, campaign: any}) => {
@@ -73,10 +98,17 @@ const Player = ({players, campaign} : {players: any[] | null, campaign: any}) =>
     )
 }
 
-const DM = () => {
+const DM = async ({campID} : {campID : string}) => {
+    const pending = await fetchCampaignPending(campID);
+    const players = await fetchPlayers();
     return (
         <div>
         Welcome DM
+        {pending != null && 
+            <div>
+                {pending.map(req => <p>{req.playerID}</p>)}
+            </div>
+        }
     </div>
     )
 }

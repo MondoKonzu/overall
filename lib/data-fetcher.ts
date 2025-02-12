@@ -1,4 +1,5 @@
 import { createClient } from "@/utils/supabase/server";
+import { BuildingType, Campaign, Pending, Player, Sizes } from "./types";
 
 /**
  * Fetch the DB for all players data
@@ -9,14 +10,14 @@ export const fetchPlayers = async () => {
     
   let { data: players, error } = await supabase
   .from('player')
-  .select('name')
+  .select('*')
   
     if(error){
       console.error(error.cause);
       return null;
     }
   
-    return players;
+    return players as Player[];
   }
 
 /**
@@ -33,7 +34,7 @@ let { data: buildingtypes, error } = await supabase
     return null;
   }
 
-  return buildingtypes;
+  return buildingtypes as BuildingType[];
 
 }
 
@@ -51,7 +52,7 @@ let { data: buildingsize, error } = await supabase
     return null;
   }
 
-  return buildingsize;
+  return buildingsize as Sizes[];
 
 }
 
@@ -69,7 +70,7 @@ export const fetchUserPlayers = async (userID: string) => {
 
   if(error)return null;
 
-  return players;
+  return players as Player[];
 }
 
 /**
@@ -102,7 +103,7 @@ export const fetchCampaignDmUser = async () =>{
   .eq("masterID", user.id);
 
   if(error) return ["fetch error"];
-  return campaigns;
+  return campaigns as Campaign[];
 }
 
 /**
@@ -117,7 +118,7 @@ export const fetchCampaignByID = async ( id : number | string ) => {
   .select("*")
   .eq("id", id);
   if(error) return null;
-  return campaign[0];
+  return campaign[0] as Campaign;
 }
 
 /**
@@ -133,7 +134,7 @@ export const fetchCampaignPlayers = async (campaignID : number | string) => {
   .eq("campaignID", campaignID);
 
   if(error) return null;
-  return players;
+  return players as Player[];
 }
 
 /**
@@ -150,5 +151,22 @@ export const fetchCampaigns = async () => {
 
   if(error) return null;
 
-  return campaigns;
+  return campaigns as Campaign[];
+}
+
+/**
+ * 
+ * @param campID the campaign for which you want to fetch the players
+ * @returns every request to join the campaign
+ */
+export const fetchCampaignPending = async (campID: string) => {
+  const supabase = await createClient();
+  let { data: pending, error } = await supabase
+  .from('pending')
+  .select("*")
+  .eq("campaingID", campID);
+
+  if(error) return null;
+
+  return pending as Pending[];
 }

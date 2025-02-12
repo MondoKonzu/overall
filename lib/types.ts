@@ -20,6 +20,11 @@ export type Pending = {
     playerID: string,
 }
 
+export type RelatedPendings = {
+    pending: Pending,
+    player: Player,
+}
+
 /**
  * The instance of the game
  */

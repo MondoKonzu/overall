@@ -1,5 +1,6 @@
 import { createClient } from "@/utils/supabase/server";
-import { BuildingType, Campaign, Pending, Player, Sizes } from "./types";
+import { BuildingType, Campaign, Pending, Player, RelatedPendings, Sizes } from "./types";
+import { relative } from "path";
 
 /**
  * Fetch the DB for all players data
@@ -126,12 +127,17 @@ export const fetchCampaignByID = async ( id : number | string ) => {
  * @param campaignID the id of the campaign to search
  * @returns every Plaayer of it
  */
-export const fetchCampaignPlayers = async (campaignID : number | string) => {
+export const fetchCampaignPlayers = async (campaignID : number | string | null) => {
   const supabase = await createClient();
-  const { data: players, error } = await supabase
+  const { data: players, error } = campaignID != null ?
+  await supabase
+  .from("player")
+  .select("*") 
+  .eq("campaignID", campaignID) :
+  await supabase
   .from("player")
   .select("*")
-  .eq("campaignID", campaignID);
+  .is("campaignID", null)
 
   if(error) return null;
   return players as Player[];
@@ -157,7 +163,8 @@ export const fetchCampaigns = async () => {
 /**
  * 
  * @param campID the campaign for which you want to fetch the players
- * @returns every request to join the campaign
+ * @returns every request to join the campaign and the relative player
+ * to do so it uses the type RelatedPlayer
  */
 export const fetchCampaignPending = async (campID: string) => {
   const supabase = await createClient();
@@ -167,6 +174,15 @@ export const fetchCampaignPending = async (campID: string) => {
   .eq("campaingID", campID);
 
   if(error) return null;
-
-  return pending as Pending[];
+  const players = await fetchCampaignPlayers(null);
+  if(players == null) return null;
+  const ans = (pending as Pending[]).map(pen => 
+    (
+      {
+        pending: pen,
+        player: players?.find(player => player.id = pen.playerID)
+      } as RelatedPendings
+    )
+    )
+  return ans ;
 }

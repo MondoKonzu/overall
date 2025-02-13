@@ -1,8 +1,10 @@
 "use server"
 
 import FormPlayer from "@/components/formPlayer";
+import RenderBack from "@/components/render-back";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { deletePlayerByID } from "@/lib/data-delete";
 import { fetchPlayers } from "@/lib/data-fetcher";
 import { fetchCampaignByID, fetchCampaignPending, fetchCampaignPlayers, fetchThisUser, fetchUserPlayers } from "@/lib/data-fetcher"
 import { User } from "@supabase/supabase-js";
@@ -103,28 +105,36 @@ const Player = ({players, campaign} : {players: any[] | null, campaign: any}) =>
 const DM = async ({campID} : {campID : string}) => {
     const pending = await fetchCampaignPending(campID);    
     return (
+        <RenderBack>
+
         <div>
         Welcome DM
         {pending != null && 
             <div className="grid">
                 {pending.map(req => 
-                <div className="flex flex-row gap-4 p-4">
+                <div key={req.pending.id} className="flex flex-row gap-4 p-4">
                     <p className="content-center">{req.player.name}</p>
                     <p className="content-center">{req.player.eddie}$</p>
-                    <form className="grid grid-cols-3 gap-4">
+                    <div className="grid grid-cols-3 gap-4">
                         <Label className="content-center">Accept:</Label>
+                        <form>
                         <Button className="bg-green-600 hover:bg-green-800">
                             <Check className="text-white scale-150" />
                         </Button>
-                        <Button className="bg-red-600 hover:bg-red-800">
+                        </form>
+                        <form>
+                            <input name="playerID" value={req.pending.playerID} readOnly className="hidden"></input>
+                        <Button className="bg-red-600 hover:bg-red-800" formAction={deletePlayerByID}>
                             <X className="text-white scale-150" />
                         </Button>
-                    </form>
+                            </form>
+                    </div>
                 </div>
                 )
                 }
             </div>
         }
     </div>
+                </RenderBack>
     )
 }

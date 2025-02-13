@@ -105,8 +105,6 @@ const Player = ({players, campaign} : {players: any[] | null, campaign: any}) =>
 const DM = async ({campID} : {campID : string}) => {
     const pending = await fetchCampaignPending(campID);    
     return (
-        <RenderBack>
-
         <div>
         Welcome DM
         {pending != null && 
@@ -117,17 +115,22 @@ const DM = async ({campID} : {campID : string}) => {
                     <p className="content-center">{req.player.eddie}$</p>
                     <div className="grid grid-cols-3 gap-4">
                         <Label className="content-center">Accept:</Label>
-                        <form>
-                        <Button className="bg-green-600 hover:bg-green-800">
-                            <Check className="text-white scale-150" />
-                        </Button>
-                        </form>
-                        <form>
-                            <input name="playerID" value={req.pending.playerID} readOnly className="hidden"></input>
-                        <Button className="bg-red-600 hover:bg-red-800" formAction={deletePlayerByID}>
-                            <X className="text-white scale-150" />
-                        </Button>
+                        <RenderBack>
+                            <form>
+                                <Button className="bg-green-600 hover:bg-green-800">
+                                    <Check className="text-white scale-150" />
+                                </Button>
                             </form>
+                        </RenderBack>
+
+                        <RenderBack>
+                            <form>
+                                <input name="playerID" value={req.pending.playerID} readOnly className="hidden"></input>
+                                    <Button className="bg-red-600 hover:bg-red-800" formAction={deletePlayerByID}>
+                                        <X className="text-white scale-150" />
+                                    </Button>
+                            </form>
+                        </RenderBack>
                     </div>
                 </div>
                 )
@@ -135,6 +138,5 @@ const DM = async ({campID} : {campID : string}) => {
             </div>
         }
     </div>
-                </RenderBack>
     )
 }

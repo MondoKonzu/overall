@@ -8,5 +8,4 @@ export const deletePlayerByID = async (formData: FormData) : Promise<any> => {
     .from('player')
     .delete()
     .eq('id', playerID);
-
 }

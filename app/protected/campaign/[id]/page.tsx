@@ -1,10 +1,13 @@
 "use server"
 
 import FormPlayer from "@/components/formPlayer";
+import RenderBack, { ButtonInClient } from "@/components/render-back";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { deletePlayerByID } from "@/lib/data-delete";
 import { fetchPlayers } from "@/lib/data-fetcher";
 import { fetchCampaignByID, fetchCampaignPending, fetchCampaignPlayers, fetchThisUser, fetchUserPlayers } from "@/lib/data-fetcher"
+import { updatePlayerPendingStatus } from "@/lib/data-update";
 import { User } from "@supabase/supabase-js";
 import { Check, X } from "lucide-react";
 import { redirect } from "next/navigation";
@@ -48,7 +51,7 @@ export default async function Page({
     if(ava == -1) {
         return <NewUser campID={id} user={user}/>
     }else if(ava == 0){
-        return<Player campaign={campaign} players={players}/>
+        return  <Player campaign={campaign} players={players}/>
     }else{
         return <DM campID={campaign!.id}/>
     }
@@ -58,7 +61,7 @@ export default async function Page({
 const NewUser = async ({campID, user} : {campID : string, user: User}) => {
     let alreadyInList = -1;
     const pendings = await fetchCampaignPending(campID);
-    if(pendings != null){
+    if(pendings != null && pendings.length > 0) {
         alreadyInList = pendings.findIndex(pend => pend.player.userID == user.id)
     }
     if(alreadyInList == -1){
@@ -93,7 +96,7 @@ const Player = ({players, campaign} : {players: any[] | null, campaign: any}) =>
         <div>
             <h3>Campaign's players:</h3>
             {players!.map(player =>
-                <p>{player.name}</p>
+                <p key={player.id}>{player.name}</p>
             )}
         </div>
     </div>
@@ -105,21 +108,27 @@ const DM = async ({campID} : {campID : string}) => {
     return (
         <div>
         Welcome DM
-        {pending != null && 
+        {(pending != null && pending.length > 0) && 
             <div className="grid">
                 {pending.map(req => 
-                <div className="flex flex-row gap-4 p-4">
+                <div key={req.pending.id} className="flex flex-row gap-4 p-4">
                     <p className="content-center">{req.player.name}</p>
                     <p className="content-center">{req.player.eddie}$</p>
-                    <form className="grid grid-cols-3 gap-4">
+                    <div className="grid grid-cols-3 gap-4">
                         <Label className="content-center">Accept:</Label>
-                        <Button className="bg-green-600 hover:bg-green-800">
-                            <Check className="text-white scale-150" />
-                        </Button>
-                        <Button className="bg-red-600 hover:bg-red-800">
-                            <X className="text-white scale-150" />
-                        </Button>
-                    </form>
+                        <RenderBack>
+                            <ButtonInClient pending={req.pending}/>
+                        </RenderBack>
+
+                        <RenderBack>
+                            <form>
+                                <input name="playerID" value={req.pending.playerID} readOnly className="hidden"></input>
+                                    <Button className="bg-red-600 hover:bg-red-800" formAction={deletePlayerByID}>
+                                        <X className="text-white scale-150" />
+                                    </Button>
+                            </form>
+                        </RenderBack>
+                    </div>
                 </div>
                 )
                 }

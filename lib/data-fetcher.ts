@@ -1,6 +1,6 @@
 import { createClient } from "@/utils/supabase/server";
 import { BuildingType, Campaign, Pending, Player, RelatedPendings, Sizes } from "./types";
-import { relative } from "path";
+import { redirect } from "next/navigation";
 
 /**
  * Fetch the DB for all players data
@@ -185,4 +185,23 @@ export const fetchCampaignPending = async (campID: string) => {
     )
     )
   return ans ;
+}
+
+/**
+ * 
+ * @returns the campaigns in which the user is a player
+ */
+export const fetchCampaignPlayerUser = async () =>  {
+  const user = await fetchThisUser();
+  if(!user) return redirect("/sign-in");
+  const players = await fetchUserPlayers(user.id);
+  const camps = await fetchCampaigns();
+  const ans : Campaign[] = [];
+  let tmp;
+  players?.forEach(player => {
+    tmp = camps?.find(camp => camp.id == player.id)
+    tmp !== undefined && ans.push(tmp);
+    }
+  )
+  return ans;
 }

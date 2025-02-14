@@ -3,7 +3,7 @@ import React from 'react'
 import { Label } from './ui/label'
 import { Input } from './ui/input'
 import { Button } from './ui/button'
-import { insertPlayerRequest } from '@/lib/data-insert'
+import { insertPlayer } from '@/lib/data-insert'
 import { useRouter } from 'next/navigation'
 
 const FormPlayer = ({campID , className} : {campID : string, className?: string}) => {
@@ -18,7 +18,7 @@ const FormPlayer = ({campID , className} : {campID : string, className?: string}
             <input readOnly value={campID} className='hidden' name='campID'></input>
 
             <Button formAction={(fd) => {
-                insertPlayerRequest(fd)
+                insertPlayer(fd, true)
                 router.refresh();
             }}
                 className='shrink w-3/12'

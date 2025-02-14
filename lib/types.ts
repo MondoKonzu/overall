@@ -16,7 +16,7 @@ export type Player = {
  */
 export type Pending = {
     id: string,
-    campaignID: string,
+    campaingID: string,
     playerID: string,
 }
 

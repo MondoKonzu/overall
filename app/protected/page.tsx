@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import Usercard from "@/components/usercard";
-import { fetchPlayers, fetchUserPlayers, fetchThisUser, fetchCampaignDmUser, fetchCampaigns } from "@/lib/data-fetcher";
+import { fetchPlayers, fetchUserPlayers, fetchThisUser, fetchCampaignDmUser, fetchCampaigns, fetchCampaignPlayerUser } from "@/lib/data-fetcher";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -24,7 +24,8 @@ export default async function ProtectedPage() {
           {[
             { trigger: "User Info", body: <Usercard/>},
             { trigger: "Le tue campagne", body: <CampaignDmInfo />},
-            { trigger: "Entra in nuove campagne", body: <CampsJoin />,isActive: true},
+            { trigger: "Le campagne dove giochi", body: <CampUserPlayer /> ,isActive: true},
+            { trigger: "Entra in nuove campagne", body: <CampsJoin />},
           ]}
         </Tabs>
       </div>
@@ -53,6 +54,13 @@ const CampaignDmInfo = async () => {
         >Create campaign</Button>
       </form>
     </div>
+  )
+}
+
+const CampUserPlayer = async () => {
+  const camp = await fetchCampaignPlayerUser();
+  return (
+    <CampaingsTable camps={camp}/>
   )
 }
 

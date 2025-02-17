@@ -1,11 +1,12 @@
 "use server"
 
 import FormPlayer from "@/components/formPlayer";
-import {AcceptPending, RefusePending, RenderBack} from "@/components/render-back";
-import { Label } from "@/components/ui/label";
 import { fetchCampaignByID, fetchCampaignPending, fetchCampaignPlayers, fetchThisUser, fetchUserPlayers } from "@/lib/data-fetcher"
 import { User } from "@supabase/supabase-js";
 import { redirect } from "next/navigation";
+import { DM } from "./DM";
+import { Player } from "./Player";
+import { NewUser } from "./NewUser";
 
 /**
  * 
@@ -51,78 +52,3 @@ export default async function Page({
         return <DM campID={campaign!.id}/>
     }
   }
-
-
-const NewUser = async ({campID, user} : {campID : string, user: User}) => {
-    let alreadyInList = -1;
-    const pendings = await fetchCampaignPending(campID);
-    if(pendings != null && pendings.length > 0) {
-        alreadyInList = pendings.findIndex(pend => pend.player.userID == user.id)
-    }
-    if(alreadyInList == -1){
-        return (
-            <div className="p-12">
-                <h2>You are not a player for this campaign</h2>
-                <p>do you want to join?</p>
-                <FormPlayer className="mt-8" campID={campID}/>
-            </div>
-        )
-    }else{
-        return(
-        <div>
-            <h2 className="text-3xl">A request was already sent</h2>
-            <p>Now wait for the DM to accept it</p>
-            <h3 className="text-xl">PG:</h3>
-            <div>
-                <p>{pendings![alreadyInList].player.name}</p>
-                <p>{pendings![alreadyInList].player.eddie}</p>
-            </div>
-        </div>
-        )
-    }
-
-
-}
-
-const Player = ({players, campaign} : {players: any[] | null, campaign: any}) => {
-    return (
-        <div className="p-12">
-        <h1>Campaign's name: {campaign.name}</h1>
-        <div>
-            <h3>Campaign's players:</h3>
-            {players!.map(player =>
-                <p key={player.id}>{player.name}</p>
-            )}
-        </div>
-    </div>
-    )
-}
-
-const DM = async ({campID} : {campID : string}) => {
-    const pending = await fetchCampaignPending(campID);    
-    return (
-        <div>
-        Welcome DM
-        {(pending != null && pending.length > 0) && 
-            <div className="grid">
-                {pending.map(req => 
-                <div key={req.pending.id} className="flex flex-row gap-4 p-4">
-                    <p className="content-center">{req.player.name}</p>
-                    <p className="content-center">{req.player.eddie}$</p>
-                    <div className="grid grid-cols-3 gap-4">
-                        <Label className="content-center">Accept:</Label>
-                        <RenderBack>
-                            <AcceptPending pending={req.pending}/>
-                        </RenderBack>
-                        <RenderBack>
-                            <RefusePending playerID={req.player.id} />
-                        </RenderBack>
-                    </div>
-                </div>
-                )
-                }
-            </div>
-        }
-    </div>
-    )
-}

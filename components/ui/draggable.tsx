@@ -27,7 +27,7 @@ const Draggable = ({children} : {children? : React.ReactNode}) => {
             <div 
             draggable
             style={styles}
-            onMouseDown={handleStartGrab}
+            onDragStart={handleStartGrab}
             onDrag={handleMove}
             onDragEnd={handleEndGrab}
             className={`${grab ? "cursor-grabbing" : "hover:cursor-grab"} select-none absolute`}

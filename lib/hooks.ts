@@ -1,3 +1,4 @@
+import { isAbsolute } from "path";
 import { RefObject, useEffect, useRef, useState } from "react";
 
 /**
@@ -12,7 +13,7 @@ export function useDraggable() {
   const activator = useRef<HTMLDivElement | null>(null);
 
   const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [isAbsolute, setIsAbsolute] = useState(false);
+  const [baseDatas, setBaseDatas] = useState({isAbsolute: false, bWidth: ""});
   const [isDragging, setIsDragging] = useState(false);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
 
@@ -70,7 +71,7 @@ export function useDraggable() {
       );
         setPosition({x: activator.current.getBoundingClientRect().left,
              y: activator.current.getBoundingClientRect().top});
-        setIsAbsolute(true);      
+        setBaseDatas({isAbsolute: true, bWidth: activator.current.getBoundingClientRect().width + "px"}); 
     }
 
     return () => {
@@ -80,18 +81,18 @@ export function useDraggable() {
         );
         setPosition({x: activator.current.getBoundingClientRect().left,
             y: activator.current.getBoundingClientRect().top});
-       setIsAbsolute(true); 
+        setBaseDatas({isAbsolute: true, bWidth: activator.current.getBoundingClientRect().width + "px"}); 
       }
     };
   }, [activator]);
 
   //styles afflict position and the main type of position
   const style = {
-    position: `${isAbsolute ? "absolute" : ""}`,
+    position: `${baseDatas.isAbsolute ? "absolute" : "static"}`,
     left: position.x,
     top: position.y,
     userSelect: "none",
-    maxWidth: "fit-content",
+    maxWidth: baseDatas.bWidth,
   };
 
   //return data needed or useful while creating a draggable component

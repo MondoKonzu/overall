@@ -1,5 +1,5 @@
 import { AcceptPending, RefusePending, RenderBack } from "@/components/render-back";
-import Draggable from "@/components/ui/draggable";
+import ApplicationSim from "@/components/ui/draggable";
 import { Label } from "@/components/ui/label";
 import { fetchCampaignPending } from "@/lib/data-fetcher";
 
@@ -28,7 +28,10 @@ export const DM = async ({campID} : {campID : string}) => {
                 }
             </div>
         }
-        <Draggable />
+        <div className="w-1/2 p-3">
+        <ApplicationSim />
+
+        </div>
     </div>
     )
 }

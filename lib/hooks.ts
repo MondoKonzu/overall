@@ -1,9 +1,10 @@
-import { RefObject, useEffect, useRef, useState } from "react";
+import { act, RefObject, useEffect, useRef, useState } from "react";
 
 export function useDraggable() {
   const activator = useRef<HTMLDivElement | null>(null);
 
   const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [isAbsolute, setIsAbsolute] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
 
@@ -52,10 +53,14 @@ export function useDraggable() {
   }, [isDragging]);
 
   useEffect(() => {
+    
     if (activator.current) {
       activator.current.addEventListener("mousedown", (e) =>
         handleMouseDown(e as unknown as MouseEvent)
       );
+        setPosition({x: activator.current.getBoundingClientRect().left,
+             y: activator.current.getBoundingClientRect().top});
+        setIsAbsolute(true);      
     }
 
     return () => {
@@ -68,7 +73,7 @@ export function useDraggable() {
   }, [activator]);
 
   const style = {
-    position: "absolute",
+    position: `${isAbsolute ? "absolute" : ""}`,
     left: position.x,
     top: position.y,
     userSelect: "none",

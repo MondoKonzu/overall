@@ -4,7 +4,7 @@ import { useDraggable } from "@/lib/hooks";
 import { useState, useEffect, act } from "react";
 
 const ApplicationSim = () => {
-  const {activator, isDragging, style} = useDraggable();
+  const {activator, isDragging, style, setMaxWidth} = useDraggable();
 
   return (
     <div
@@ -19,7 +19,7 @@ const ApplicationSim = () => {
       >
         Drag me here will be the bar
       </div>
-      <div className="">
+      <div>
       Lorem ipsum dolor sit amet, consectetur adipisicing elit. Veritatis dicta autem molestiae modi consequatur, facere soluta fugit temporibus, numquam quam aliquam pariatur aut ipsum aliquid eveniet nostrum accusantium, maiores earum.
       </div>
     </div>

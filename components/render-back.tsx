@@ -15,23 +15,3 @@ export const RenderBack = ({ children }: { children: React.ReactNode }) => {
     </div>
   )
 }
-
-export const AcceptPending = ({ pending }: { pending: Pending }) => {
-  return (
-      <Button
-        onClick={() => { updatePlayerPendingStatus(pending) }}
-        type="submit" className="bg-green-600 hover:bg-green-800">
-        <Check className="text-white scale-150" />
-      </Button>
-  )
-}
-
-export const RefusePending = ({playerID} : {playerID : string}) => {
-  return (
-    <Button className="bg-red-600 hover:bg-red-800" onClick={() => {deletePlayerByID(playerID)}}>
-    <X className="text-white scale-150" />
-  </Button>
-  )
-}
-
-

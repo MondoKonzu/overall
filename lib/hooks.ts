@@ -1,29 +1,17 @@
-import { isAbsolute } from "path";
 import { RefObject, useEffect, useRef, useState } from "react";
 
-/**
- * 
- * @returns style: to applay to the element which shold move
- * @returns activator: to use as ref of the element that should activate and handle the grab
- * @returns isDragging: in case you need to perform actions during handling
- * @returns position: in case you need to know where it is in the page
- * @returns setWidth: a fn which get the string of value with unit like "40vw" must be used after the element has been rendered
- */
 export function useDraggable() {
   const activator = useRef<HTMLDivElement | null>(null);
 
   const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [baseDatas, setBaseDatas] = useState({isAbsolute: false, width: ""});
+  const [baseDatas, setBaseDatas] = useState({ isAbsolute: false, width: "" });
   const [isDragging, setIsDragging] = useState(false);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
 
   const handleMouseDown = (e: MouseEvent) => {
     if (!activator.current) return;
 
-    // Get the initial position of the element with respect to the window
     const rect = activator.current.getBoundingClientRect();
-
-    // Calculates the offset between the mouse and the upper left corner of the element
     setOffset({
       x: e.clientX - rect.left,
       y: e.clientY - rect.top,
@@ -33,12 +21,22 @@ export function useDraggable() {
   };
 
   const handleMouseMove = (e: MouseEvent) => {
-    if (!isDragging) return;
+    if (!isDragging || !activator.current) return;
 
-    // Calculates the new position relative to the container
+    const rect = activator.current.getBoundingClientRect();
+    const maxX = window.innerWidth - rect.width -2;
+    const maxY = window.innerHeight - rect.height;
+
+    let newX = e.clientX - offset.x;
+    let newY = e.clientY - offset.y;
+
+    // Ensure the element stays within the viewport boundaries
+    newX = Math.max(0, Math.min(newX, maxX));
+    newY = Math.max(0, Math.min(newY, maxY));
+
     setPosition({
-      x: e.clientX - offset.x,
-      y: e.clientY - offset.y,
+      x: newX,
+      y: newY,
     });
   };
 
@@ -46,7 +44,6 @@ export function useDraggable() {
     setIsDragging(false);
   };
 
-  //when the element is grabbed listener is applied to the whole document
   useEffect(() => {
     if (isDragging) {
       document.addEventListener("mousemove", handleMouseMove);
@@ -62,16 +59,19 @@ export function useDraggable() {
     };
   }, [isDragging]);
 
-  //when the ref is attached to the element add every needed option
   useEffect(() => {
-    
     if (activator.current) {
       activator.current.addEventListener("mousedown", (e) =>
         handleMouseDown(e as unknown as MouseEvent)
       );
-        setPosition({x: activator.current.getBoundingClientRect().left,
-             y: activator.current.getBoundingClientRect().top});
-        setBaseDatas({isAbsolute: true, width: activator.current.getBoundingClientRect().width + "px"}); 
+      setPosition({
+        x: activator.current.getBoundingClientRect().left,
+        y: activator.current.getBoundingClientRect().top,
+      });
+      setBaseDatas({
+        isAbsolute: true,
+        width: activator.current.getBoundingClientRect().width + "px",
+      });
     }
 
     return () => {
@@ -79,14 +79,10 @@ export function useDraggable() {
         activator.current.removeEventListener("mousedown", (e) =>
           handleMouseDown(e as unknown as MouseEvent)
         );
-        setPosition({x: activator.current.getBoundingClientRect().left,
-            y: activator.current.getBoundingClientRect().top});
-        setBaseDatas({isAbsolute: true, width: activator.current.getBoundingClientRect().width + "px"}); 
       }
     };
   }, [activator]);
 
-  //styles afflict position and the main type of position
   const style = {
     position: `${baseDatas.isAbsolute ? "absolute" : "static"}`,
     left: position.x,
@@ -94,15 +90,16 @@ export function useDraggable() {
     userSelect: "none",
     width: baseDatas.width,
   };
-  const setWidth = (valueWithUnit : string ) => {
-    setBaseDatas((prev) => ({...prev, width: valueWithUnit}));
-  }
-  //return data needed or useful while creating a draggable component
+
+  const setWidth = (valueWithUnit: string) => {
+    setBaseDatas((prev) => ({ ...prev, width: valueWithUnit }));
+  };
+
   return { style, activator, isDragging, position, setWidth } as {
     style: {};
     activator: RefObject<HTMLDivElement | null>;
     isDragging: boolean;
     position: { x: number; y: number };
-    setWidth: (value : string) => void;
+    setWidth: (value: string) => void;
   };
 }

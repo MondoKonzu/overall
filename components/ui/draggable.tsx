@@ -4,7 +4,7 @@ import { useDraggable } from "@/lib/hooks";
 import { useState, useEffect, act } from "react";
 
 const ApplicationSim = () => {
-  const {activator, isDragging, style, setMaxWidth} = useDraggable();
+  const {activator, isDragging, style, setWidth} = useDraggable();
 
   return (
     <div

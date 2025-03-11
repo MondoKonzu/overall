@@ -7,13 +7,13 @@ import { RefObject, useEffect, useRef, useState } from "react";
  * @returns activator: to use as ref of the element that should activate and handle the grab
  * @returns isDragging: in case you need to perform actions during handling
  * @returns position: in case you need to know where it is in the page
- * @returns setMaxWidth: a fn which get the string of value with unit like "40vw" must be used after the element has been rendered
+ * @returns setWidth: a fn which get the string of value with unit like "40vw" must be used after the element has been rendered
  */
 export function useDraggable() {
   const activator = useRef<HTMLDivElement | null>(null);
 
   const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [baseDatas, setBaseDatas] = useState({isAbsolute: false, maxWidth: ""});
+  const [baseDatas, setBaseDatas] = useState({isAbsolute: false, width: ""});
   const [isDragging, setIsDragging] = useState(false);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
 
@@ -71,7 +71,7 @@ export function useDraggable() {
       );
         setPosition({x: activator.current.getBoundingClientRect().left,
              y: activator.current.getBoundingClientRect().top});
-        setBaseDatas({isAbsolute: true, maxWidth: activator.current.getBoundingClientRect().width + "px"}); 
+        setBaseDatas({isAbsolute: true, width: activator.current.getBoundingClientRect().width + "px"}); 
     }
 
     return () => {
@@ -81,7 +81,7 @@ export function useDraggable() {
         );
         setPosition({x: activator.current.getBoundingClientRect().left,
             y: activator.current.getBoundingClientRect().top});
-        setBaseDatas({isAbsolute: true, maxWidth: activator.current.getBoundingClientRect().width + "px"}); 
+        setBaseDatas({isAbsolute: true, width: activator.current.getBoundingClientRect().width + "px"}); 
       }
     };
   }, [activator]);
@@ -92,17 +92,17 @@ export function useDraggable() {
     left: position.x,
     top: position.y,
     userSelect: "none",
-    maxWidth: baseDatas.maxWidth,
+    width: baseDatas.width,
   };
-  const setMaxWidth = (valueWithUnit : string ) => {
-    setBaseDatas((prev) => ({...prev, maxWidth: valueWithUnit}));
+  const setWidth = (valueWithUnit : string ) => {
+    setBaseDatas((prev) => ({...prev, width: valueWithUnit}));
   }
   //return data needed or useful while creating a draggable component
-  return { style, activator, isDragging, position, setMaxWidth } as {
+  return { style, activator, isDragging, position, setWidth } as {
     style: {};
     activator: RefObject<HTMLDivElement | null>;
     isDragging: boolean;
     position: { x: number; y: number };
-    setMaxWidth: (value : string) => void;
+    setWidth: (value : string) => void;
   };
 }

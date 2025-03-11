@@ -4,10 +4,10 @@ import { useDraggable } from "@/lib/hooks";
 import { useState, useEffect, act } from "react";
 
 const ApplicationSim = () => {
-  const {activator, isDragging, style, setWidth} = useDraggable();
-
+  const {activator, isDragging, draggableRef, style} = useDraggable();
   return (
     <div
+      ref={draggableRef}
       style={style}
       className="rounded border"
     >

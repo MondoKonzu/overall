@@ -1,3 +1,4 @@
+import { Resizable } from "re-resizable";
 import { RefObject, useEffect, useRef, useState, useCallback, useMemo } from "react";
 
 export function useDraggable() {
@@ -105,6 +106,11 @@ export function useDraggable() {
     setBaseDatas((prev) => ({ ...prev, width: valueWithUnit }));
   }, []);
 
+    // Function to set the width of the draggable element
+    const setHeight = useCallback((valueHeightUnit: string) => {
+      setBaseDatas((prev) => ({ ...prev, height: valueHeightUnit }));
+    }, []);
+
   return {
     style,
     activator,
@@ -112,6 +118,7 @@ export function useDraggable() {
     isDragging,
     position,
     setWidth,
+    setHeight
   } as {
     style: React.CSSProperties;
     activator: RefObject<HTMLDivElement | null>;
@@ -119,5 +126,6 @@ export function useDraggable() {
     isDragging: boolean;
     position: { x: number; y: number };
     setWidth: (value: string) => void;
+    setHeight: (value: string) => void;
   };
 }

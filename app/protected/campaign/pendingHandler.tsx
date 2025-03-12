@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { deletePlayerByID } from '@/lib/data-delete'
-import { updatePlayerPendingStatus } from '@/lib/data-update'
+import { updatePlayerEddie, updatePlayerPendingStatus } from '@/lib/data-update'
 import { Pending, RelatedPendings } from '@/lib/types'
 import { Check, X } from 'lucide-react'
 import React, { useState } from 'react'
@@ -17,14 +17,16 @@ const PendingHandler = ({ req , className}: { req: RelatedPendings, className?: 
     const handleInputChange = (e : React.FormEvent<HTMLInputElement>) => {
       const newValue = e.currentTarget.value;
       setEddieValue(newValue); // Update the state
+      req.player.eddie = newValue;
+      updatePlayerEddie(req.player);
     };
   
     return (
-        <form action="" className={className}>
+        <div className={className}>
             <p className="content-center">{req.player.name}</p>
 
-            <Input className="content-center max-w-24 decoration-none" type='number'
-             onInput={handleInputChange} value={eddieValue}></Input>
+                <Input className="content-center max-w-24 decoration-none" type='number'
+                 onInput={handleInputChange} value={eddieValue}></Input>
 
             <div className="grid grid-cols-3 gap-4">
                 <Label className="content-center">Accept:</Label>
@@ -35,7 +37,7 @@ const PendingHandler = ({ req , className}: { req: RelatedPendings, className?: 
                     <RefusePending playerID={req.player.id} />
                 </RenderBack>
             </div>
-        </form>
+        </div>
     )
 }
 

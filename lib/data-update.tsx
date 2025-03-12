@@ -1,7 +1,20 @@
 "use server"
 import { createClient } from "@/utils/supabase/server";
-import { Pending } from "./types";
+import { Pending, Player } from "./types";
 import { deletePending } from "./data-delete";
+
+export const updatePlayerEddie = async (player : Player) => {
+    const supabase = await createClient();
+
+    const { data, error } = await supabase
+    .from('player')
+    .update({ eddie: player.eddie })
+    .eq("id" ,player.id)
+    .select();
+
+    if(error) return null;
+    return data;            
+}
 
 /**
  * 

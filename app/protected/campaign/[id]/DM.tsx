@@ -16,8 +16,10 @@ export const DM = async ({campID} : {campID : string}) => {
                 }
             </div>
         }
-        <div className="w-1/2 p-3">
-        <ApplicationSim />
+        <div className="grid grid-cols-2">
+            <ApplicationSim appName="Powa">
+                minne
+            </ApplicationSim>
 
         </div>
     </div>

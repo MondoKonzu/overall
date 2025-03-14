@@ -3,12 +3,27 @@
 import { useDraggable } from "@/lib/hooks";
 import { Direction } from "re-resizable/lib/resizer";
 import { Minus, Square, X } from "lucide-react";
-import { NumberSize, Resizable } from "re-resizable";
-import { useEffect, useState } from "react";
+import { Resizable } from "re-resizable";
+import { useEffect } from "react";
 
-const ApplicationSim = () => {
+const ApplicationSim = (
+  {appName, children, className, set}
+   : 
+  {appName: string, children: React.ReactNode, className?: string, 
+    set? : {width?: string, height?: string, position?: {x: number, y:number}}
+  }) => {
   const { activator, isDragging, draggableRef, style, setWidth, setHeight, position, setPosition } = useDraggable();
 
+  useEffect(() => {
+
+    if(set !== undefined){
+      if(set.position !== undefined){
+        setPosition(position);
+      }
+      if(set.height !== undefined) setHeight(set.height);
+      if(set.width !== undefined) setWidth(set.width);
+    }
+  }, [])
 
   const handleResize = (e: MouseEvent | TouchEvent, dir: Direction, ref: HTMLElement) => {
     if (ref.style.width !== "auto") {
@@ -16,12 +31,17 @@ const ApplicationSim = () => {
     }
 
     setHeight(ref.style.height);
-    if (dir.includes("left") && e instanceof MouseEvent) {
+    if (dir.toLowerCase().includes("left") && e instanceof MouseEvent) {
       setPosition({ x: e.screenX, y: position.y });
     }
-    if (dir.includes("top") && e instanceof MouseEvent) {
+    if (dir.toLowerCase().includes("top") && e instanceof MouseEvent) {
       setPosition({ x: position.x, y: e.screenY })
     }
+    if(dir == "topLeft" && e instanceof MouseEvent){
+      setPosition({ x: e.screenX, y: e.screenY })
+
+    }
+    
   }
 
 
@@ -29,12 +49,11 @@ const ApplicationSim = () => {
     <div
       ref={draggableRef}
       style={style}
-      className="rounded border"
+      className="rounded border bg-black"
     >
       <Resizable
         size={{ height: style.height }}
         onResize={handleResize}
-        bounds={"window"}
         className="overflow-hidden"
       >
         <div
@@ -44,7 +63,7 @@ const ApplicationSim = () => {
         >
           <span>Appname</span> <span className="flex"> <Minus /><Square /><X /></span>
         </div>
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Veritatis dicta autem molestiae modi consequatur, facere soluta fugit temporibus, numquam quam aliquam pariatur aut ipsum aliquid eveniet nostrum accusantium, maiores earum.
+            {children}
       </Resizable>
     </div>
   );

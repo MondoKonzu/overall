@@ -1,25 +1,44 @@
-import { Resizable } from "re-resizable";
 import { RefObject, useEffect, useRef, useState, useCallback, useMemo } from "react";
 
 export function useDraggable() {
-  const activator = useRef<HTMLDivElement | null>(null); // Element that triggers the drag
-  const draggableRef = useRef<HTMLDivElement | null>(null); // Element that moves
+  const activator = useRef<HTMLDivElement | null>(null); // Element that triggers the drag activator
+  const draggableRef = useRef<HTMLDivElement | null>(null); // Element that moves draggaableRef
 
+  /**
+   * Keep the position of the element that move,
+   * x = left in px, y = top in px
+   */
   const [position, setPosition] = useState({ x: 0, y: 0 });
+  /**
+   * Data to deal for rendering on position : absolute, those data will affect 
+   * the width and height of the element that move
+   */
   const [baseDatas, setBaseDatas] = useState({ isAbsolute: false, width: "", height: "" });
+  /**
+   * Just a state to deal with the drag status, help to deal with style changes
+   */
   const [isDragging, setIsDragging] = useState(false);
+  /**
+   * keep the value of the offset which indicate the position the mouse
+   * is going to be on the element that move
+   */
   const [offset, setOffset] = useState({ x: 0, y: 0 });
 
   // Handle mouse down on the activator
   const handleMouseDown = useCallback((e: MouseEvent) => {
+    // ONLY when both activator and draggable are in the DOM
+    // and linked to an element
     if (!activator.current || !draggableRef.current) return;
 
+    //get the info of the whole draggable element
     const rect = draggableRef.current.getBoundingClientRect();
+    // setting the offset mousePosition - elementPosition
     setOffset({
       x: e.clientX - rect.left,
       y: e.clientY - rect.top,
     });
 
+    //the drag event begin
     setIsDragging(true);
   }, []);
 
@@ -27,10 +46,12 @@ export function useDraggable() {
   const handleMouseMove = useCallback((e: MouseEvent) => {
     if (!isDragging || !draggableRef.current) return;
 
+    /* vars to check that the dragged element is still in the window */
     const rect = draggableRef.current.getBoundingClientRect();
     const maxX = window.innerWidth - rect.width;
     const maxY = window.innerHeight - rect.height;
 
+    //the actual position of the element
     let newX = e.clientX - offset.x;
     let newY = e.clientY - offset.y;
 
@@ -38,6 +59,7 @@ export function useDraggable() {
     newX = Math.max(0, Math.min(newX, maxX));
     newY = Math.max(0, Math.min(newY, maxY));
 
+    //setting the position if possible 
     setPosition({
       x: newX,
       y: newY,
@@ -112,13 +134,13 @@ export function useDraggable() {
     }, []);
 
   return {
-  style,
-  activator,
-  draggableRef,
-  isDragging,
-  position,
-  setWidth,
-  setHeight,
+  style,//move the element
+  activator,//the element to drag for moving the element
+  draggableRef,//the element to move
+  isDragging,// true when the element is on drag else false
+  position,//position of the element x = left , y = top
+  setWidth,// a fn to change the element width on need
+  setHeight,// a fn to change the element height on need
   setPosition, // Add this line
 } as {
   style: React.CSSProperties;
@@ -128,6 +150,6 @@ export function useDraggable() {
   position: { x: number; y: number };
   setWidth: (value: string) => void;
   setHeight: (value: string) => void;
-  setPosition: (value: { x: number; y: number }) => void; // Add this line
+  setPosition: (value: { x: number; y: number }) => void;
 };
 }

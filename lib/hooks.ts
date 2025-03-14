@@ -112,20 +112,22 @@ export function useDraggable() {
     }, []);
 
   return {
-    style,
-    activator,
-    draggableRef,
-    isDragging,
-    position,
-    setWidth,
-    setHeight
-  } as {
-    style: React.CSSProperties;
-    activator: RefObject<HTMLDivElement | null>;
-    draggableRef: RefObject<HTMLDivElement | null>;
-    isDragging: boolean;
-    position: { x: number; y: number };
-    setWidth: (value: string) => void;
-    setHeight: (value: string) => void;
-  };
+  style,
+  activator,
+  draggableRef,
+  isDragging,
+  position,
+  setWidth,
+  setHeight,
+  setPosition, // Add this line
+} as {
+  style: React.CSSProperties;
+  activator: RefObject<HTMLDivElement | null>;
+  draggableRef: RefObject<HTMLDivElement | null>;
+  isDragging: boolean;
+  position: { x: number; y: number };
+  setWidth: (value: string) => void;
+  setHeight: (value: string) => void;
+  setPosition: (value: { x: number; y: number }) => void; // Add this line
+};
 }

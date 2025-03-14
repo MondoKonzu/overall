@@ -1,4 +1,4 @@
-import ApplicationSim from "@/components/ui/draggable";
+import ApplicationSim from "@/components/ui/applicationsim";
 import { fetchCampaignPending } from "@/lib/data-fetcher";
 import PendingHandler from "../pendingHandler";
 

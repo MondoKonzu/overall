@@ -1,6 +1,7 @@
 import ApplicationSim from "@/components/ui/applicationsim";
 import { fetchCampaignPending } from "@/lib/data-fetcher";
 import PendingHandler from "../pendingHandler";
+import DesktopSim from "../desktop";
 
 export const DM = async ({campID} : {campID : string}) => {
     const pending = await fetchCampaignPending(campID);    
@@ -16,12 +17,17 @@ export const DM = async ({campID} : {campID : string}) => {
                 }
             </div>
         }
-        <div className="grid grid-cols-2">
-            <ApplicationSim appName="Powa">
+        <DesktopSim className="grid grid-cols-6 gap-8 p-8">
+            <ApplicationSim appInfo={{appName: "11", status:"open",id: 1}}>
                 minne
             </ApplicationSim>
-
-        </div>
+            <ApplicationSim appInfo={{appName: "22", status:"open",id: 2}}>
+                minne
+            </ApplicationSim>
+            <ApplicationSim appInfo={{appName: "33", status:"open",id: 3}}>
+                minne
+            </ApplicationSim>
+        </DesktopSim>
     </div>
     )
 }

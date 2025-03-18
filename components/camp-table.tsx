@@ -18,7 +18,7 @@ const CampaingsTable = ({camps} : {camps : any[]}) => {
             }}/>
         </div>
         <ScrollArea className='p-4 max-h-[25vh]'>
-            <div className='w-full bg-slate-700 p-2 rounded-lg grid gap-2 min-h-16'>
+            <div className='w-full p-2 rounded-lg grid gap-2 min-h-16'>
                 {findCamps(search, camps)}
             </div>
         </ScrollArea>
@@ -31,10 +31,10 @@ export default CampaingsTable
 const findCamps = (search : string, camps: any[]) => {
     const res = camps.filter((camp) => camp.name.toLowerCase().includes(search.toLowerCase())).map(item =>
         <Link 
-            href={`/protected/joincampaign/${item.id}`} key={item.id}
+            href={`/protected/campaign/${item.id}`} key={item.id}
         >
             <div 
-            className='rounded-lg bg-slate-800 !w-full p-4'
+            className='rounded-lg dark:bg-gray-300/20 bg-gray-300/30 !w-full p-4'
             >
                 {item.name}
             </div>

@@ -1,4 +1,6 @@
 import { createClient } from "@/utils/supabase/server";
+import { BuildingType, Campaign, Pending, Player, RelatedPendings, Sizes } from "./types";
+import { redirect } from "next/navigation";
 
 /**
  * Fetch the DB for all players data
@@ -9,14 +11,14 @@ export const fetchPlayers = async () => {
     
   let { data: players, error } = await supabase
   .from('player')
-  .select('name')
+  .select('*')
   
     if(error){
       console.error(error.cause);
       return null;
     }
   
-    return players;
+    return players as Player[];
   }
 
 /**
@@ -33,7 +35,7 @@ let { data: buildingtypes, error } = await supabase
     return null;
   }
 
-  return buildingtypes;
+  return buildingtypes as BuildingType[];
 
 }
 
@@ -51,7 +53,7 @@ let { data: buildingsize, error } = await supabase
     return null;
   }
 
-  return buildingsize;
+  return buildingsize as Sizes[];
 
 }
 
@@ -69,7 +71,7 @@ export const fetchUserPlayers = async (userID: string) => {
 
   if(error)return null;
 
-  return players;
+  return players as Player[];
 }
 
 /**
@@ -102,7 +104,7 @@ export const fetchCampaignDmUser = async () =>{
   .eq("masterID", user.id);
 
   if(error) return ["fetch error"];
-  return campaigns;
+  return campaigns as Campaign[];
 }
 
 /**
@@ -117,7 +119,7 @@ export const fetchCampaignByID = async ( id : number | string ) => {
   .select("*")
   .eq("id", id);
   if(error) return null;
-  return campaign[0];
+  return campaign[0] as Campaign;
 }
 
 /**
@@ -125,15 +127,20 @@ export const fetchCampaignByID = async ( id : number | string ) => {
  * @param campaignID the id of the campaign to search
  * @returns every Plaayer of it
  */
-export const fetchCampaignPlayers = async (campaignID : number | string) => {
+export const fetchCampaignPlayers = async (campaignID : number | string | null) => {
   const supabase = await createClient();
-  const { data: players, error } = await supabase
+  const { data: players, error } = campaignID != null ?
+  await supabase
+  .from("player")
+  .select("*") 
+  .eq("campaignID", campaignID) :
+  await supabase
   .from("player")
   .select("*")
-  .eq("campaignID", campaignID);
+  .is("campaignID", null)
 
   if(error) return null;
-  return players;
+  return players as Player[];
 }
 
 /**
@@ -150,5 +157,51 @@ export const fetchCampaigns = async () => {
 
   if(error) return null;
 
-  return campaigns;
+  return campaigns as Campaign[];
+}
+
+/**
+ * 
+ * @param campID the campaign for which you want to fetch the players
+ * @returns every request to join the campaign and the relative player
+ * to do so it uses the type RelatedPlayer
+ */
+export const fetchCampaignPending = async (campID: string) => {
+  const supabase = await createClient();
+  let { data: pending, error } = await supabase
+  .from('pending')
+  .select("*")
+  .eq("campaingID", campID);
+
+  if(error) return null;
+  const players = await fetchCampaignPlayers(null);
+  if(players == null) return null;
+  const ans = (pending as Pending[]).map(pen => 
+    (
+      {
+        pending: pen,
+        player: players?.find(player => player.id = pen.playerID)
+      } as RelatedPendings
+    )
+    )
+  return ans ;
+}
+
+/**
+ * 
+ * @returns the campaigns in which the user is a player
+ */
+export const fetchCampaignPlayerUser = async () =>  {
+  const user = await fetchThisUser();
+  if(!user) return redirect("/sign-in");
+  const players = await fetchUserPlayers(user.id);
+  const camps = await fetchCampaigns();
+  const ans : Campaign[] = [];
+  let tmp;
+  players?.forEach(player => {
+    tmp = camps?.find(camp => camp.id == player.id)
+    tmp !== undefined && ans.push(tmp);
+    }
+  )
+  return ans;
 }

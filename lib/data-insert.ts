@@ -3,6 +3,8 @@
 import { createClient } from "@/utils/supabase/server"
 import { redirect } from "next/navigation";
 import { fetchThisUser } from "./data-fetcher";
+import { Palanquin } from "next/font/google";
+import { RelatedPendings } from "./types";
 
 export const insertBuilding = async (formData : FormData) : Promise<any> => {
     const supabase = await createClient();
@@ -97,4 +99,54 @@ export const insertCampaign = async (formData : FormData) : Promise<any> => {
       ])
     
     if(error) return redirect("/error")
+}
+
+/**
+ * 
+ * @param formData the data to create the player pending
+ * @param isPending if setted to true create a player request else just create the player
+ * @returns just null in case of error
+ */
+export const insertPlayer = async (formData: FormData, isPending : boolean = false ) : Promise<any> => {
+    const name = formData.get("name")?.toString();
+    const eddie = formData.get("eddie")?.toString();
+    const campID = formData.get("campID")?.toString();
+    const user = await fetchThisUser();
+    if(!user) return redirect ("/sign-in");
+    const supabase = await createClient();
+    const {data, error} = await supabase
+    .from("player")
+    .insert([
+        {"userID": user.id,
+            "name": name,
+            "eddie": eddie,
+            "campaignID": (isPending ? null : campID),
+         },
+    ]).select();
+
+    if(error) return null;
+    if(isPending){
+        insertPending(campID!, data[0].id)
+    }
+}
+
+/**
+ * 
+ * @param campID the id of campaign for the player
+ * @param playerID the id of the player (which has null campaignID)
+ */
+const insertPending = async (campID : string, playerID : string) => {
+    const supabase = await createClient();
+    
+    const { data, error } = await supabase
+    .from('pending')
+    .insert([
+      { "campaingID": campID, "playerID": playerID },
+    ])
+    .select();
+    if(error){
+        console.log(error)
+    }else{
+        console.log(data)
+    }
 }

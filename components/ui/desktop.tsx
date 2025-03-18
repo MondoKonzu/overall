@@ -91,7 +91,18 @@ const DesktopSim = ({ className, children }: { className?: string; children: Rea
 
   return (
     <DesktopContext.Provider value={contextValue}>
-      <div className={className}>{children}</div>
+      <div>
+        <div className={"min-w-[100vw] min-h-[100vh]"}>
+          <div className={className}>
+            {children}
+          </div>
+          <div className='absolute bottom-0 flex gap-2 place-content-center pt-2 min-w-[100vw] min-h-10 bg-zinc-600/40 '>
+            {apps.filter(app => app.status != "close")
+            .map(app => <div key={app.appID}>{app.appName}</div>)}
+          </div>
+        </div>
+      </div>
+
     </DesktopContext.Provider>
   );
 };

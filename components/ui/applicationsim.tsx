@@ -5,7 +5,7 @@ import { Direction } from "re-resizable/lib/resizer";
 import { Minus, Square, X } from "lucide-react";
 import { Resizable } from "re-resizable";
 import { useEffect } from "react";
-import { useDesktop } from "@/app/protected/campaign/desktop";
+import { useDesktop } from "@/components/ui/desktop";
 import { random, round } from "lodash";
 
 const ApplicationSim = (

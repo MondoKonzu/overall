@@ -68,7 +68,7 @@ const DesktopSim = ({ className, children }: { className?: string; children: Rea
       }
       return sorted.map((item, index) => ({
         ...item,
-        zIndex: item.appID === appID ? max: item.zIndex-1,
+        zIndex: item.appID === appID ? max : (item.zIndex == 0 ? item.zIndex : item.zIndex-1),
       }));
     });
   };

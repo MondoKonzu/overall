@@ -6,7 +6,26 @@ import { Minus, Square, X } from "lucide-react";
 import { Resizable } from "re-resizable";
 import { useEffect } from "react";
 import { useDesktop } from "@/components/ui/desktop";
-import { random, round } from "lodash";
+import { random } from "lodash";
+
+export const App = (
+  { icon, appInfo, children, className, set }: 
+  { icon? : string,
+    appInfo: {appName: string, status: "open" | "hidden" | "close", id: string | number},
+    children: React.ReactNode, className?: string, 
+    set?: { width?: string, height?: string, position?: { x: number, y: number } }
+  }
+) => {
+  return (
+    <div>
+      <div>dsa</div>
+      <ApplicationSim appInfo={appInfo} set={set} className={className}>
+        {children}
+      </ApplicationSim>
+    </div>
+  )
+
+}
 
 const ApplicationSim = (
   { appInfo, children, className, set }: 
@@ -77,4 +96,3 @@ const ApplicationSim = (
   );
 };
 
-export default ApplicationSim;

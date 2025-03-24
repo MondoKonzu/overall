@@ -2,28 +2,26 @@
 
 import React, { useContext, useState, createContext } from 'react';
 
-// Define the type for the app object
 type App = {
-  appID: string | number;
+  appID: string;
   appName: string;
   status: "open" | "hidden" | "close";
   zIndex: number;
 };
 
-// Define the context value type
 type DesktopContextValue = {
   apps: App[];
-  addApp: (appName: string, status: "open" | "hidden" | "close", id: string | number) => number | undefined;
-  activeApp: (appID: number | string) => void;
-  getZindex: (appID: number | string) => number;
+  addApp: (appName: string, status: "open" | "hidden" | "close", id: string) => string;
+  activeApp: (appID: string) => void;
+  getZindex: (appID: string) => number;
+  updateAppStatus: (appID: string, status: "open" | "hidden" | "close") => void // Add this
 };
 
-// Create the context with a default value
 export const DesktopContext = createContext<DesktopContextValue>({
   apps: [],
   addApp: () => {
     console.warn("addApp called without a provider!");
-    return 0;
+    return "0";
   },
   activeApp: () => {
     console.warn("activeApp called without a provider!");
@@ -31,6 +29,9 @@ export const DesktopContext = createContext<DesktopContextValue>({
   getZindex: () => {
     console.warn("getZindex called without a provider!");
     return 0;
+  },
+  updateAppStatus: () => { 
+    console.warn("updateAppStatus called without a provider!");
   }
 });
 
@@ -43,19 +44,26 @@ const DesktopSim = ({ className, children }: { className?: string; children: Rea
     return addedApp;
   }
 
-  const addApp = (appName: string, status: "open" | "hidden" | "close", id: string | number) => {
-    let ind = getMaxIndex();
-    addedApp++;
-    const newApp: App = {
-      appID: id,
-      appName: appName,
-      status: status,
-      zIndex: ind, // Set the initial zIndex to the current number of apps
-    };
-    if(apps.find(app => app.appID === id)) {return undefined}
-    console.log(ind)
-    setApps((prev) => [...prev, newApp]);
-    return newApp.zIndex;
+  const addApp = (appName: string, status: "open" | "hidden" | "close", id: string) => {
+    const appID = id || `${appName}-${Date.now()}`;
+    
+    setApps(prevApps => {
+      // Prevent duplicates
+      if (prevApps.some(app => app.appID === appID)) {
+        return prevApps;
+      }
+      let ind = getMaxIndex()
+      const newApp: App = {
+        appID,
+        appName,
+        status,
+        zIndex: ind,
+      };
+      
+      return [...prevApps, newApp];
+    });
+    
+    return appID;
   };
 
   const activeApp = (appID: number | string) => {
@@ -82,12 +90,23 @@ const DesktopSim = ({ className, children }: { className?: string; children: Rea
     }
   }
 
+  const updateAppStatus = (appID: string, status: "open" | "hidden" | "close") => {
+    setApps(prevApps => 
+      prevApps.map(app => 
+        app.appID === appID ? { ...app, status } : app
+      )
+    );
+  };
+
   const contextValue: DesktopContextValue = {
     apps,
     addApp,
     activeApp,
-    getZindex
+    getZindex,
+    updateAppStatus
   };
+
+  const show = apps.filter(app => app.status != "close").map(app => <div key={app.appID}>{app.appName}</div>)
 
   return (
     <DesktopContext.Provider value={contextValue}>
@@ -97,12 +116,10 @@ const DesktopSim = ({ className, children }: { className?: string; children: Rea
             {children}
           </div>
           <div className='absolute bottom-0 flex gap-2 place-content-center pt-2 min-w-[100vw] min-h-10 bg-zinc-600/40 '>
-            {apps.filter(app => app.status != "close")
-            .map(app => <div key={app.appID}>{app.appName}</div>)}
+            {show}
           </div>
         </div>
       </div>
-
     </DesktopContext.Provider>
   );
 };

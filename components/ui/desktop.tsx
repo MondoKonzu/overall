@@ -69,8 +69,8 @@ const DesktopSim = ({ className, children }: { className?: string; children: Rea
   const activeApp = (appID: number | string) => {
     setApps((prev) => {
       const sorted = [...prev].sort((a, b) => b.zIndex - a.zIndex);
-      console.log(apps)
-      const max = sorted[0].zIndex;
+      let max = sorted[0].zIndex;
+      if(max < apps.length){max = apps.length}
       if(sorted[0].appID == appID) {
         return sorted
       }
@@ -96,6 +96,7 @@ const DesktopSim = ({ className, children }: { className?: string; children: Rea
         app.appID === appID ? { ...app, status } : app
       )
     );
+    return status;
   };
 
   const contextValue: DesktopContextValue = {
@@ -106,7 +107,10 @@ const DesktopSim = ({ className, children }: { className?: string; children: Rea
     updateAppStatus
   };
 
-  const show = apps.filter(app => app.status != "close").map(app => <div key={app.appID}>{app.appName}</div>)
+  const show = apps.filter(app => app.status != "close").map(app => 
+    <button key={app.appID} onClick={()=> {updateAppStatus(app.appID, "open")}}>
+      {app.appName}
+    </button>)
 
   return (
     <DesktopContext.Provider value={contextValue}>

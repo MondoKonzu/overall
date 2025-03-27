@@ -23,31 +23,30 @@ export const App = (
         desktop.updateAppStatus(appInfo.id, newStatus);
       }
       setStatus(newStatus);
-    } 
+    }
+    
     useEffect(() => {
       if (!desktop) return;
       desktop.addApp(appInfo.appName, appInfo.status, appInfo.id);
     }, [desktop, appInfo.id, appInfo.appName, appInfo.status]);
-  
-    const toggleApp = () => {
-      if (!desktop) return;
-      const currentStatus = desktop.apps.find(a => a.appID === appInfo.id)?.status || "close";
-      desktop.updateAppStatus(appInfo.id, currentStatus === "open" ? "hidden" : "open");
-    };
+
+
+    const openApp = () => handleAppStatus("open")
+    const closeApp = () => handleAppStatus("close")
+    const hideApp = () => handleAppStatus("hidden")
     return (
       <div>
-        <div onClick={() => {
-          handleAppStatus(status === "open" ? "hidden" : "open");
-          console.log(desktop.apps)
-        }} style={{ cursor: "pointer" }}>
+        <div onClick={openApp} style={{ cursor: "pointer" }}>
           bobby
         </div>
-        {status === "open" && (
+        {(status === "open" || status === "hidden") && (
           <AppSim 
             key={appInfo.id} 
             appInfo={{...appInfo, status}} 
-            className={className} 
+            className={className}
             set={set}
+            closeApp={closeApp}
+            hideApp={hideApp}
           >
             {children}
           </AppSim>
@@ -57,11 +56,13 @@ export const App = (
 };
 
 const AppSim = (
-  { appInfo, children, className, set }:
+  { appInfo, children, className, set, hideApp, closeApp }:
     {
       appInfo: { appName: string, status: "open" | "hidden" | "close", id: string},
       children: React.ReactNode, className?: string,
       set?: { width?: string, height?: string, position?: { x: number, y: number } }
+      hideApp: () => void,
+      closeApp: () => void,
     }
 ) => {
   const { activator, isDragging, draggableRef, style, setWidth, setHeight, position, setPosition } = useDraggable();
@@ -98,10 +99,11 @@ const AppSim = (
   <div
     key={"appSim" + appInfo.id}
     ref={draggableRef}
+    onLoad={() => {desktop.activeApp(appInfo.id)}}
     style={{ ...style, zIndex: desktop.getZindex(appInfo.id) }}
-    className={` ${className === undefined ? "rounded border bg-black" : className}`}
+    className={` ${className === undefined ? "rounded border bg-black" : className} ${appInfo.status !== "open" ? "hidden" : ""}`}
     onMouseDown={() => { desktop.activeApp(appInfo.id)}}
-  >
+>
     <Resizable
       size={{ height: style.height }}
       onResize={handleResize}
@@ -113,9 +115,9 @@ const AppSim = (
       >
         <span>{appInfo.appName}</span>
         <span className="flex">
-          <Minus onClick={() => desktop.updateAppStatus(appInfo.id, "hidden")} />
+          <Minus onClick={hideApp}/>
           <Square />
-          <X onClick={() => desktop.updateAppStatus(appInfo.id, "close")} />
+          <X onClick={closeApp}/>
         </span>
       </div>
       {children}

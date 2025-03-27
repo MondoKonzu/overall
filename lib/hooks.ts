@@ -1,6 +1,15 @@
 import { RefObject, useEffect, useRef, useState, useCallback, useMemo } from "react";
 
-export function useDraggable() {
+type Props = {
+  data?: {
+    pos?:{
+      x: number;
+      y: number;
+    }
+  }
+}
+
+export function useDraggable(props? : Props) {
   const activator = useRef<HTMLDivElement | null>(null); // Element that triggers the drag activator
   const draggableRef = useRef<HTMLDivElement | null>(null); // Element that moves draggaableRef
 
@@ -104,7 +113,11 @@ export function useDraggable() {
   useEffect(() => {
     if (draggableRef.current) {
       const rect = draggableRef.current.getBoundingClientRect();
-      setPosition({ x: rect.left, y: rect.top });
+      if(props != undefined && props.data !== undefined && props.data.pos !== undefined){
+        setPosition({x: props.data.pos.x, y: props.data.pos.y});
+      }else{
+        setPosition({ x: rect.left, y: rect.top });
+      }
       setBaseDatas({
         isAbsolute: true,
         width: rect.width + "px",

@@ -18,13 +18,19 @@ export const DM = async ({campID} : {campID : string}) => {
             </div>
         } */}
         <DesktopSim className="grid grid-cols-3 gap-8 p-8">
-            <App appInfo={{appName: "11", status:"close",id: "1"}}>
+            <App appInfo={{
+                icon: "/spugna.png",
+                appName: "11", status:"close",id: "1"}}>
                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Asperiores animi ducimus itaque tempora nesciunt id voluptas nam, quisquam totam distinctio reiciendis laboriosam tenetur! Praesentium voluptatibus placeat optio soluta culpa repellat.
             </App>
-            <App appInfo={{appName: "22", status:"close",id: "2"}}>
+            <App appInfo={{
+                icon: "/spugna.png",
+                appName: "22", status:"close",id: "2"}}>
                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Asperiores animi ducimus itaque tempora nesciunt id voluptas nam, quisquam totam distinctio reiciendis laboriosam tenetur! Praesentium voluptatibus placeat optio soluta culpa repellat.
             </App>
-            <App appInfo={{appName: "33", status:"close",id: "3"}}>
+            <App appInfo={{
+                icon: "/spugna.png",
+                appName: "33", status:"close",id: "3"}}>
                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Asperiores animi ducimus itaque tempora nesciunt id voluptas nam, quisquam totam distinctio reiciendis laboriosam tenetur! Praesentium voluptatibus placeat optio soluta culpa repellat.
             </App>
         </DesktopSim>

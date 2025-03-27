@@ -1,5 +1,6 @@
 "use client";
 
+import Image from 'next/image';
 import React, { useContext, useState, createContext } from 'react';
 
 type App = {
@@ -7,14 +8,16 @@ type App = {
   appName: string;
   status: "open" | "hidden" | "close";
   zIndex: number;
+  icon: string;
 };
 
 type DesktopContextValue = {
   apps: App[];
-  addApp: (appName: string, status: "open" | "hidden" | "close", id: string) => string;
+  addApp: (icon: string,appName: string, status: "open" | "hidden" | "close", id: string) => string;
   activeApp: (appID: string) => void;
   getZindex: (appID: string) => number;
   updateAppStatus: (appID: string, status: "open" | "hidden" | "close") => void // Add this
+  getAppStatus: (appID: string) => "open" | "hidden" | "close";
 };
 
 export const DesktopContext = createContext<DesktopContextValue>({
@@ -32,6 +35,10 @@ export const DesktopContext = createContext<DesktopContextValue>({
   },
   updateAppStatus: () => { 
     console.warn("updateAppStatus called without a provider!");
+  },
+  getAppStatus : () => {
+    console.warn("getAppStatus called without a provider!");
+    return "close";
   }
 });
 
@@ -44,7 +51,7 @@ const DesktopSim = ({ className, children }: { className?: string; children: Rea
     return addedApp;
   }
 
-  const addApp = (appName: string, status: "open" | "hidden" | "close", id: string) => {
+  const addApp = (icon : string, appName: string, status: "open" | "hidden" | "close", id: string) => {
     const appID = id || `${appName}-${Date.now()}`;
     
     setApps(prevApps => {
@@ -58,6 +65,7 @@ const DesktopSim = ({ className, children }: { className?: string; children: Rea
         appName,
         status,
         zIndex: ind,
+        icon
       };
       
       return [...prevApps, newApp];
@@ -99,18 +107,24 @@ const DesktopSim = ({ className, children }: { className?: string; children: Rea
     return status;
   };
 
+  const getAppStatus = (appID: string) => {
+    let app = apps.find(app => app.appID === appID);
+    return app !== undefined ? app.status : "close";
+  }
+
   const contextValue: DesktopContextValue = {
     apps,
     addApp,
     activeApp,
     getZindex,
-    updateAppStatus
+    updateAppStatus,
+    getAppStatus
   };
 
   const show = apps.filter(app => app.status != "close").map(app => 
-    <button key={app.appID} onClick={()=> {updateAppStatus(app.appID, "open")}}>
-      {app.appName}
-    </button>)
+    <div key={app.appID} onClick={()=> {updateAppStatus(app.appID, "open")}}>
+      <Image src={app.icon} alt={app.appName} width={30} height={30} />
+    </div>)
 
   return (
     <DesktopContext.Provider value={contextValue}>

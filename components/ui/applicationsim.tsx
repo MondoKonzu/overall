@@ -6,11 +6,11 @@ import { Minus, Square, X } from "lucide-react";
 import { Resizable } from "re-resizable";
 import { useEffect, useState } from "react";
 import { useDesktop } from "@/components/ui/desktop";
-import { random } from "lodash";
+import Image from "next/image";
 
 export const App = (
   { appInfo, children, className, set }: 
-  { appInfo: {appName: string, status: "open" | "hidden" | "close", id: string},
+  { appInfo: {icon: string,appName: string, status: "open" | "hidden" | "close", id: string},
     children: React.ReactNode, className?: string, 
     set?: { width?: string, height?: string, position?: { x: number, y: number } }
   }) => {
@@ -27,7 +27,7 @@ export const App = (
     
     useEffect(() => {
       if (!desktop) return;
-      desktop.addApp(appInfo.appName, appInfo.status, appInfo.id);
+      desktop.addApp(appInfo.icon,appInfo.appName, appInfo.status, appInfo.id);
     }, [desktop, appInfo.id, appInfo.appName, appInfo.status]);
 
 
@@ -37,7 +37,7 @@ export const App = (
     return (
       <div>
         <div onClick={openApp} style={{ cursor: "pointer" }}>
-          bobby
+          <Image alt={appInfo.appName} width={"50"} height={"50"} src={appInfo.icon} />
         </div>
         {(status === "open" || status === "hidden") && (
           <AppSim 
@@ -58,7 +58,7 @@ export const App = (
 const AppSim = (
   { appInfo, children, className, set, hideApp, closeApp }:
     {
-      appInfo: { appName: string, status: "open" | "hidden" | "close", id: string},
+      appInfo: { icon: string,appName: string, status: "open" | "hidden" | "close", id: string},
       children: React.ReactNode, className?: string,
       set?: { width?: string, height?: string, position?: { x: number, y: number } }
       hideApp: () => void,
@@ -67,6 +67,9 @@ const AppSim = (
 ) => {
   const { activator, isDragging, draggableRef, style, setWidth, setHeight, position, setPosition } = useDraggable();
   const desktop = useDesktop();
+  const [lastInfo, setLastInfo] = useState<{pos : {x: number, y: number}, sizes: {width: string, height: string}}>
+  ({pos : {x: 0, y: 0}, sizes : {width: "", height: ""}});
+  const [isMax, setIsMax] = useState(false);
 
   useEffect(() => {
     if (set !== undefined) {
@@ -77,7 +80,6 @@ const AppSim = (
       if (set.width !== undefined) setWidth(set.width);
     }
   }, [set, setPosition, setHeight, setWidth, position]);
-
 
   const handleResize = (e: MouseEvent | TouchEvent, dir: Direction, ref: HTMLElement) => {
     if (ref.style.width !== "auto") {
@@ -95,13 +97,35 @@ const AppSim = (
     }
   };
 
+  const handleMaxSize = () => {
+    if(draggableRef !== undefined && draggableRef.current !== null){
+      let w = draggableRef.current.getBoundingClientRect().width + "px";
+      let h = draggableRef.current.getBoundingClientRect().height + "px";
+
+      setLastInfo({pos: position, sizes: {width: w, height: h}});
+    }else{
+      setLastInfo({pos: position, sizes: {width: "100%", height: "100%"}});
+    }
+    setPosition({x: 0, y: 0});
+    setWidth("99.9vw")
+    setHeight((window.innerHeight-1) + "px");
+    setIsMax(true);
+  }
+
+  const handleLessSize = () => {
+    setHeight(lastInfo.sizes.height)
+    setWidth(lastInfo.sizes.width)
+    setPosition(lastInfo.pos)
+    setIsMax(false);
+  }
+
   return (
   <div
     key={"appSim" + appInfo.id}
     ref={draggableRef}
     onLoad={() => {desktop.activeApp(appInfo.id)}}
     style={{ ...style, zIndex: desktop.getZindex(appInfo.id) }}
-    className={` ${className === undefined ? "rounded border bg-black" : className} ${appInfo.status !== "open" ? "hidden" : ""}`}
+    className={` ${className === undefined ? "rounded border bg-black" : className} ${desktop.getAppStatus(appInfo.id) !== "open" ? "hidden" : ""}`}
     onMouseDown={() => { desktop.activeApp(appInfo.id)}}
 >
     <Resizable
@@ -114,10 +138,16 @@ const AppSim = (
         className={` p-2 rounded-t bg-gray-600 flex justify-between ${isDragging ? "cursor-grabbing" : "cursor-grab"}`}
       >
         <span>{appInfo.appName}</span>
-        <span className="flex">
-          <Minus onClick={hideApp}/>
-          <Square />
-          <X onClick={closeApp}/>
+        <span className="flex gap-2">
+          <Minus className="cursor-pointer" onClick={hideApp}/>
+          <Square className="cursor-pointer" onClick={() => {
+            if(isMax) {
+              handleLessSize()
+            }else{
+              handleMaxSize()
+            }
+          }}/>
+          <X className="cursor-pointer" onClick={closeApp}/>
         </span>
       </div>
       {children}

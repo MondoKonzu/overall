@@ -5,6 +5,10 @@ type Props = {
     pos?:{
       x: number;
       y: number;
+    },
+    size?: {
+      width?: string,
+      height?: string
     }
   }
 }
@@ -120,8 +124,8 @@ export function useDraggable(props? : Props) {
       }
       setBaseDatas({
         isAbsolute: true,
-        width: rect.width + "px",
-        height: rect.height + "px",
+        width: props?.data?.size?.width !== undefined ? props.data.size.width! : rect.width + "px",
+        height: props?.data?.size?.width !== undefined ? props.data.size.height! : rect.height + "px",
       });
     }
   }, [draggableRef.current]);

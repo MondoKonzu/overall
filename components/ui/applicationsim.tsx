@@ -65,21 +65,19 @@ const AppSim = (
       closeApp: () => void,
     }
 ) => {
-  const { activator, isDragging, draggableRef, style, setWidth, setHeight, position, setPosition } = useDraggable();
+  const { activator, isDragging, draggableRef, style, setWidth, setHeight, position, setPosition } = useDraggable(
+    {data: {
+      pos: set?.position !== undefined ? set.position : undefined,
+      size: {
+        height: set?.height !== undefined ? set.height : undefined,
+        width: set?.width !== undefined ? set.width : undefined,
+      }
+    }}
+  );
   const desktop = useDesktop();
   const [lastInfo, setLastInfo] = useState<{pos : {x: number, y: number}, sizes: {width: string, height: string}}>
   ({pos : {x: 0, y: 0}, sizes : {width: "", height: ""}});
   const [isMax, setIsMax] = useState(false);
-
-  useEffect(() => {
-    if (set !== undefined) {
-      if (set.position !== undefined) {
-        setPosition(position);
-      }
-      if (set.height !== undefined) setHeight(set.height);
-      if (set.width !== undefined) setWidth(set.width);
-    }
-  }, [set, setPosition, setHeight, setWidth, position]);
 
   const handleResize = (e: MouseEvent | TouchEvent, dir: Direction, ref: HTMLElement) => {
     if (ref.style.width !== "auto") {
@@ -118,7 +116,8 @@ const AppSim = (
     setPosition(lastInfo.pos)
     setIsMax(false);
   }
-
+  let tmp = style.height
+  style.height = "calc("+tmp+"+1px)"
   return (
   <div
     key={"appSim" + appInfo.id}

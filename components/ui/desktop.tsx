@@ -122,8 +122,15 @@ const DesktopSim = ({ className, children }: { className?: string; children: Rea
   };
 
   const show = apps.filter(app => app.status != "close").map(app => 
-    <div key={app.appID} onClick={()=> {updateAppStatus(app.appID, "open")}}>
-      <Image src={app.icon} alt={app.appName} width={30} height={30} />
+    <div key={app.appID} onClick={()=> {
+          let t = getAppStatus(app.appID);
+          t == 'hidden' ? updateAppStatus(app.appID, "open")
+          : updateAppStatus(app.appID, "hidden");
+        }}
+          className="h-10 w-10 my-1 flex place-content-center p-1
+          bg-gray-500/30 hover:bg-gray-500/50 duration-100 hover:p-0.5"
+        >
+      <Image src={app.icon} alt={app.appName} width={40} height={30} />
     </div>)
 
   return (
@@ -133,7 +140,8 @@ const DesktopSim = ({ className, children }: { className?: string; children: Rea
           <div className={className}>
             {children}
           </div>
-          <div className='absolute bottom-0 flex gap-2 place-content-center pt-2 min-w-[100vw] min-h-10 bg-zinc-600/40 '>
+          <div 
+          className='absolute bottom-0 flex gap-2 justify-center min-w-[100vw] min-h-12 bg-zinc-600/40 '>
             {show}
           </div>
         </div>

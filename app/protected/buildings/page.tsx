@@ -1,11 +1,10 @@
 import React from 'react'
 
-const Buildings = () => {
-  return (
+const Build = () => {
+    return (
     <div>
-        
+      Lesso
     </div>
   )
 }
-
-export default Buildings
+export default Build

@@ -57,6 +57,7 @@ export type BuildingType = {
 
 export type Building = {
     id: string,
+    campaignID: string,
     created_at: string,
     name: string,
     typeID: string,

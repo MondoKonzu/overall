@@ -1,5 +1,5 @@
 import { createClient } from "@/utils/supabase/server";
-import { BuildingType, Campaign, Pending, Player, RelatedPendings, Sizes } from "./types";
+import { Building, BuildingType, Campaign, Pending, Player, RelatedPendings, Sizes } from "./types";
 import { redirect } from "next/navigation";
 
 /**
@@ -204,4 +204,14 @@ export const fetchCampaignPlayerUser = async () =>  {
     }
   )
   return ans;
+}
+
+export const fetchBuildings = async () => {
+  const supabase = await createClient();
+  let { data: building, error } = await supabase
+  .from('building')
+  .select('*');
+
+  if(error) return null;
+  return building as Building[];         
 }

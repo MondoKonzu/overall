@@ -2,6 +2,7 @@ import { App } from "@/components/ui/applicationsim";
 import { fetchCampaignPending } from "@/lib/data-fetcher";
 import PendingHandler from "../pendingHandler";
 import DesktopSim from "../../../../components/ui/desktop";
+import Building from "../building";
 
 export const DM = async ({ campID }: { campID: string }) => {
     const pending = await fetchCampaignPending(campID);
@@ -40,9 +41,11 @@ export const DM = async ({ campID }: { campID: string }) => {
                     icon: "/spugna.png",
                     appName: "22", status: "close", id: "2"
                 }}
-                    set={{width: "30vw", height: "20vh"}}
+                    set={{width: "50vw"}}
                 >
-                    <iframe className="w-full h-[90%]" src="http://localhost:3000/protected/buildings"></iframe>
+                    <Building campID={campID}>
+
+                    </Building>
                 </App>
                 <App appInfo={{
                     icon: "/spugna.png",

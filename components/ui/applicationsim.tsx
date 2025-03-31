@@ -7,6 +7,7 @@ import { Resizable } from "re-resizable";
 import { useEffect, useState } from "react";
 import { useDesktop } from "@/components/ui/desktop";
 import Image from "next/image";
+import { steps } from "motion";
 
 export const App = (
   { appInfo, children, className, set }: 
@@ -77,7 +78,6 @@ const AppSim = (
   const desktop = useDesktop();
   const [lastInfo, setLastInfo] = useState<{pos : {x: number, y: number}, sizes: {width: string, height: string}}>
   ({pos : {x: 0, y: 0}, sizes : {width: "", height: ""}});
-  const [isMax, setIsMax] = useState(false);
 
   const handleResize = (e: MouseEvent | TouchEvent, dir: Direction, ref: HTMLElement) => {
     if (ref.style.width !== "auto") {
@@ -107,17 +107,21 @@ const AppSim = (
     setPosition({x: 0, y: 0});
     setWidth("99.9vw")
     setHeight((window.innerHeight-1) + "px");
-    setIsMax(true);
   }
 
   const handleLessSize = () => {
     setHeight(lastInfo.sizes.height)
     setWidth(lastInfo.sizes.width)
     setPosition(lastInfo.pos)
-    setIsMax(false);
   }
-  let tmp = style.height
-  style.height = "calc("+tmp+"+1px)"
+
+  const isMax = (style.width == "99.9vw" && style.height == (window.innerHeight-1) + "px")
+    ?
+      true
+    :
+     false;
+
+  "calc(" + style.height + "+1px)"
   return (
   <div
     key={"appSim" + appInfo.id}
@@ -128,7 +132,7 @@ const AppSim = (
     onMouseDown={() => { desktop.activeApp(appInfo.id)}}
 >
     <Resizable
-      size={{ height: style.height }}
+      size={{ height: style.height}}
       onResize={handleResize}
       className="overflow-hidden"
     >

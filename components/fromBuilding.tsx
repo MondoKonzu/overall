@@ -15,7 +15,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { insertBuilding } from "@/lib/data-insert";
 
-export default async function FormInsertBuild() {
+export default async function FormBuild() {
   const supabase = await createClient();
   const buildingtype = await fetchBulidingType();
   const sizes = await fetchSizes();

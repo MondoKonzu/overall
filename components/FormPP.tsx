@@ -1,6 +1,4 @@
-import { createClient } from "@/utils/supabase/server";
-import { redirect } from "next/navigation";
-import { fetchSizes, fetchBulidingType } from "@/lib/data-fetcher";
+"use client"
 import {
   Select,
   SelectContent,
@@ -14,19 +12,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { insertBuilding } from "@/lib/data-insert";
+import { BuildingType, Sizes } from "@/lib/types";
 
-export default async function FormBuild() {
-  const supabase = await createClient();
-  const buildingtype = await fetchBulidingType();
-  const sizes = await fetchSizes();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    return redirect("/sign-in");
-  }
-
+export default function FormPP({buildingtype, sizes, campID}:{buildingtype: BuildingType[] | null,sizes : Sizes[] | null, campID : string}) {
 
   return (
     <div>
@@ -37,7 +25,7 @@ export default async function FormBuild() {
           <Input placeholder="Factory4$" name="name" required></Input>
           {SelectType(buildingtype)}
           {SelectSize(sizes)}
-          <Button formAction={insertBuilding}>Submit</Button>
+          <Button formAction={(e) => {e.append("campID", campID), insertBuilding(e)}}>Submit</Button>
         </form>
       </div>
     </div>

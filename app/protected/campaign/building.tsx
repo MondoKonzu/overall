@@ -10,7 +10,7 @@ import {
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import FormBuild from '@/components/fromBuilding'
+import FormBuild from '@/components/formBuildings'
   
 
 const Building = async ({campID} : {campID: string}) => {
@@ -28,7 +28,7 @@ const Building = async ({campID} : {campID: string}) => {
                     {build.name}
                 </div>
             )}
-            <FormBuild />
+            <FormBuild campID={campID} />
         </div>
     )
 }

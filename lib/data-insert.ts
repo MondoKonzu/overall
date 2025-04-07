@@ -11,6 +11,7 @@ export const insertBuilding = async (formData : FormData) : Promise<any> => {
     const name = formData.get("name")!.toString();
     const type = formData.get("type")!.toString();
     const size = formData.get("size")!.toString();
+    const campID = formData.get("campID")!.toString();
     const typeID = await getIdbyTypeName(type);
     const priceEarn = await getBuildingRow(type);
     const multiplier = await getMultuplierRow(size); 
@@ -26,7 +27,8 @@ export const insertBuilding = async (formData : FormData) : Promise<any> => {
     .insert([
     { name: name, typeID: typeID, sizeID: size,
         earnatplayer: (priceEarn[1] * multiplier),
-        priceatplayer: (priceEarn[0] * multiplier) 
+        priceatplayer: (priceEarn[0] * multiplier),
+        campaignID: campID
      },
   ])
   .select()

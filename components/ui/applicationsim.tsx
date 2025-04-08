@@ -136,10 +136,9 @@ const AppSim = (
       onResize={handleResize}
       className="overflow-hidden relative"
     >
-      {children}
       <div
         ref={activator}
-        className={`absolute bottom-0 w-6/12 translate-x-[50%] p-2 rounded-t bg-gray-600 flex justify-between ${isDragging ? "cursor-grabbing" : "cursor-grab"}`}
+        className={`p-2 rounded-t bg-gray-600 flex justify-between ${isDragging ? "cursor-grabbing" : "cursor-grab"}`}
       >
         <span>{appInfo.appName}</span>
         <span className="flex gap-2">
@@ -154,6 +153,7 @@ const AppSim = (
           <X className="cursor-pointer" onClick={closeApp}/>
         </span>
       </div>
+      {children}
     </Resizable>
   </div>)
 }

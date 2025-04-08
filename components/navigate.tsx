@@ -1,18 +1,31 @@
 "use client"
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button } from './ui/button'
 import Image from 'next/image'
 import { ModeToggle } from './ui/mode-toggle'
 import Link from 'next/link'
 import { signOutAction } from '@/lib/actions'
+import { User } from '@supabase/supabase-js'
+import { createClient } from '@/utils/supabase/client'
 
 
 const Navigate = () => {
+  const [user, setUser] = useState<User | null>(null);
   const [isVisible, setIsVisible] = useState(false)
   const handleClick = () => {
     setIsVisible(!isVisible)
   }
+
+  useEffect(() => {
+    const getUser = async () => {
+      const supabase = createClient();
+      const { data } = await supabase.auth.getUser();
+      setUser(data.user);
+    }
+    getUser();
+  }, []);
+
   return (
     <div className='overflow-x-hidden'>
       <Button onClick={handleClick} variant={"ghost"} className={`fixed rounded-none z-50`}>
@@ -22,7 +35,7 @@ const Navigate = () => {
         duration-300 bg-red-500/90 backdrop-blur-sm`}>
           <div className='grid md:grid-cols-3'>
             <div className='col-span-2 p-16  hidden md:block' onClick={handleClick}>
-              placeholder
+              {user != null ? user.user_metadata.display_name : "placeholder"}
             </div>
             <div className='bg-red-950/15 min-h-screen top-0 px-4
               grid '>

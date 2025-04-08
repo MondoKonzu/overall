@@ -50,8 +50,8 @@ export const DM = async ({ campID }: { campID: string }) => {
                 <App appInfo={{
                     icon: "/spugna.png",
                     appName: "33", status: "close", id: "3"
-                }}>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Asperiores animi ducimus itaque tempora nesciunt id voluptas nam, quisquam totam distinctio reiciendis laboriosam tenetur! Praesentium voluptatibus placeat optio soluta culpa repellat.
+                }} set={{width: "10vw"}}>
+                    Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nostrum earum pariatur dolore veritatis libero. Optio molestias aut distinctio quae at ea, tenetur ab, delectus tempora error, ut voluptas quia nisi!
                 </App>
             </DesktopSim>
         </div>

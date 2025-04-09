@@ -25,7 +25,7 @@ export const fetchPlayers = async () => {
  * Search the DB for every building type
  * @returns null in case of error, an array of {id, price, earn, typename} otherwise
  */
-export const fetchBulidingType = async() => {
+export const fetchBuilidingType = async() => {
   const supabase = await createClient();
 let { data: buildingtypes, error } = await supabase
   .from('building-type')

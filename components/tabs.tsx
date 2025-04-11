@@ -1,6 +1,9 @@
 "use client"
 
+import { cn } from '@/lib/utils';
+import clsx from 'clsx';
 import React, { useState } from 'react'
+import { twMerge } from 'tailwind-merge';
 
 export type Tab = {
     trigger : string | React.ReactNode;
@@ -8,7 +11,7 @@ export type Tab = {
     isActive?: boolean;
 }
 
-const Tabs = ({children} : {children : Tab[]}) => {
+const Tabs = ({children, className} : {children : Tab[], className?: string}) => {
     const getActive = () : number => {
         let ans = children.findIndex(item => item.isActive);
         ans == -1 && (ans = 0);
@@ -21,7 +24,7 @@ const Tabs = ({children} : {children : Tab[]}) => {
         setActiveTab(tn);
     }
   return (
-    <div className='w-full dark:bg-black border rounded-md p-3 grid gap-2'>
+    <div className={cn("w-full dark:bg-black border rounded-md p-3 grid gap-2", className)}  >
         <div className='flex gap-2 p-1'>
             {children.map((trig, index) => 
             <div

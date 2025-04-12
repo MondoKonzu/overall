@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { useDesktop } from "@/components/ui/desktop";
 import Image from "next/image";
 import { steps } from "motion";
+import { cn } from "@/lib/utils";
 
 export const App = (
   { appInfo, children, className, set }: 
@@ -15,10 +16,12 @@ export const App = (
     children: React.ReactNode, className?: string, 
     set?: { width?: string, height?: string, position?: { x: number, y: number } }
   }) => {
+    //recovering useful vars
     const desktop = useDesktop();
     // Use appInfo.status as initial state to keep in sync with context
     const [status, setStatus] = useState<"open" | "hidden" | "close">(appInfo.status);
 
+    // update the status both for the app and the context
     const handleAppStatus = (newStatus: "open" | "hidden" | "close") => {
       if(desktop){
         desktop.updateAppStatus(appInfo.id, newStatus);
@@ -26,20 +29,26 @@ export const App = (
       setStatus(newStatus);
     }
     
+    // adding the app in the context
     useEffect(() => {
       if (!desktop) return;
       desktop.addApp(appInfo.icon,appInfo.appName, appInfo.status, appInfo.id);
     }, [desktop, appInfo.id, appInfo.appName, appInfo.status]);
 
 
+    //just to make it easier to use handleAppStatus
     const openApp = () => handleAppStatus("open")
     const closeApp = () => handleAppStatus("close")
     const hideApp = () => handleAppStatus("hidden")
     return (
       <div>
+
+        {/* Icon */}
         <div onClick={openApp} style={{ cursor: "pointer" }}>
           <Image alt={appInfo.appName} width={"50"} height={"50"} src={appInfo.icon} />
         </div>
+        
+        {/* Main app */}
         {(status === "open" || status === "hidden") && (
           <AppSim 
             key={appInfo.id} 
@@ -75,7 +84,10 @@ const AppSim = (
       }
     }}
   );
+  //the whole trash above is just the wrong way to get vars
+
   const desktop = useDesktop();
+
   const [lastInfo, setLastInfo] = useState<{pos : {x: number, y: number}, sizes: {width: string, height: string}}>
   ({pos : {x: 0, y: 0}, sizes : {width: "", height: ""}});
 
@@ -123,22 +135,25 @@ const AppSim = (
 
   "calc(" + style.height + "+1px)"
   return (
-  <div
+    // the whole body
+    <div
     key={"appSim" + appInfo.id}
     ref={draggableRef}
     onLoad={() => {desktop.activeApp(appInfo.id)}}
     style={{ ...style, zIndex: desktop.getZindex(appInfo.id) }}
-    className={` ${className === undefined ? "rounded border bg-black" : className} ${desktop.getAppStatus(appInfo.id) !== "open" ? "hidden" : ""}`}
+    className={` ${cn("rounded border bg-black", className)} ${isMax ? "" : "cut-edge-app"} ${desktop.getAppStatus(appInfo.id) !== "open" ? "hidden" : ""}`}
     onMouseDown={() => { desktop.activeApp(appInfo.id)}}
 >
+  {/* resizer */}
     <Resizable
       size={{ height: style.height}}
       onResize={handleResize}
       className="overflow-hidden relative"
     >
+      {/* Activator of the drag event */}
       <div
         ref={activator}
-        className={`p-2 rounded-t bg-gray-600 flex justify-between ${isDragging ? "cursor-grabbing" : "cursor-grab"}`}
+        className={`${isMax ? "" : "cut-edge-tl"} ps-10 p-2 rounded-t bg-gray-600 flex justify-between ${isDragging ? "cursor-grabbing" : "cursor-grab"}`}
       >
         <span>{appInfo.appName}</span>
         <span className="flex gap-2">
@@ -153,6 +168,7 @@ const AppSim = (
           <X className="cursor-pointer" onClick={closeApp}/>
         </span>
       </div>
+      {/* body */}
       {children}
     </Resizable>
   </div>)

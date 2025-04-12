@@ -95,4 +95,15 @@
     clip-path: polygon(0% 0%,94.5% 0%, 100% 56%, 100% 100%, 6.5% 100%, 0% 34%) !important;
     /* clip-path: polygon(0% 0%,95% 0%, 100% 51%, 100% 100%, 6.5% 100%, 0% 37%) !important; */
   }
+
+  .cut-edge-tl{
+    @apply rounded-none;
+    clip-path: polygon(1.8rem 0%,100% 0%, 100% 100%, 100% 100%, 0% 100%, 0% 1.6rem) !important;
+  }
+
+  .cut-edge-app{
+    @apply rounded-none;
+    clip-path: polygon(1.8rem 0%,100% 0%, 100% calc(100% - 2.5rem), calc(100% - 2.5rem) 100%, 0% 100%, 0% 1.6rem) !important;
+  }
+
 }

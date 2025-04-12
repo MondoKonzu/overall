@@ -44,7 +44,7 @@ export const DesktopContext = createContext<DesktopContextValue>({
 
 const DesktopSim = ({ className, children }: { className?: string; children: React.ReactNode }) => {
   const [apps, setApps] = useState<App[]>([]);
-  let addedApp = 0;
+  let addedApp = 1;
 
   const getMaxIndex = () => {
     apps.map(item => item.zIndex).sort((a, b) => b - a);
@@ -84,7 +84,7 @@ const DesktopSim = ({ className, children }: { className?: string; children: Rea
       }
       return sorted.map((item, index) => ({
         ...item,
-        zIndex: item.appID === appID ? max : (item.zIndex == 0 ? item.zIndex : item.zIndex-1),
+        zIndex: item.appID === appID ? max : (item.zIndex == 1 ? item.zIndex : item.zIndex-1),
       }));
     });
   };
@@ -141,7 +141,7 @@ const DesktopSim = ({ className, children }: { className?: string; children: Rea
             {children}
           </div>
           <div 
-          className='absolute bottom-0 flex gap-2 justify-center min-w-[100vw] min-h-12 bg-zinc-600/40 '>
+          className='absolute bottom-0 flex gap-2 justify-center min-w-[100vw] min-h-12 bg-zinc-600/70 backdrop-blur-sm z-0'>
             {show}
           </div>
         </div>

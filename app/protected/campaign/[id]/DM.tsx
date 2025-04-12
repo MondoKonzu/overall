@@ -1,6 +1,6 @@
 import { App } from "@/components/ui/applicationsim";
 import { fetchCampaignPending, fetchCampaignPlayers } from "@/lib/data-fetcher";
-import PendingHandler from "../pendingHandler";
+import {ModifyPlayer, PendingHandler} from "../playerHandler";
 import DesktopSim from "../../../../components/ui/desktop";
 import Building from "../building";
 import Tabs from "@/components/tabs";
@@ -9,7 +9,7 @@ export const DM = async ({ campID }: { campID: string }) => {
     const pending = await fetchCampaignPending(campID);
     const players = await fetchCampaignPlayers(campID);
     return (
-        <div>
+        <div className="bg-[url(/wallpaper.png)] bg-cover">
             {/* Welcome DM
         {(pending != null && pending.length > 0) && 
             <div className="grid">
@@ -25,12 +25,12 @@ export const DM = async ({ campID }: { campID: string }) => {
                     icon: "/spugna.png",
                     appName: "11", status: "close", id: "1"
                 }}
-                    set={{ width: "fit-content" }}
+                    set={{ width: "fit-content", height: "40vh" }}
                 >
-                    <Tabs className="rounded-none border-none min-w-[400px]">
+                    <Tabs className="rounded-none border-none w-[400px]">
                         {[
                             {
-                                trigger: "Pendings", body:
+                                trigger: "Pendings", className: "border-none p-0",body:
                                     <>
                                         {(pending != null && pending.length > 0) ?
                                             <div className="grid">
@@ -41,14 +41,15 @@ export const DM = async ({ campID }: { campID: string }) => {
                                                 }
                                             </div>
                                             :
-                                            <div className="flex flex-col gap-4 p-4">There are no pending</div>
+                                            <div>There are no pending</div>
                                         }
                                     </>
                             },
-                            {trigger: "Players", body: 
+                            {trigger: "Players",className: "border-none p-0", body: 
                                 <div>
                                     {players != null && players.length > 0 ? 
-                                        players.map(player => <div key={player.id}>{player.name} + {player.eddie}</div>)
+                                        players.map(player => 
+                                        <ModifyPlayer key={player.id} info={player}/>)
                                         :
                                         <div>There are no players</div>
                                 }
@@ -61,17 +62,9 @@ export const DM = async ({ campID }: { campID: string }) => {
                     icon: "/spugna.png",
                     appName: "22", status: "close", id: "2"
                 }}
-                    set={{ width: "50vw" }}
+                    set={{ width: "50vw", position: {x:10, y:10}}}
                 >
-                    <Building campID={campID}>
-
-                    </Building>
-                </App>
-                <App appInfo={{
-                    icon: "/spugna.png",
-                    appName: "33", status: "close", id: "3"
-                }} set={{ width: "10vw" }}>
-                    Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nostrum earum pariatur dolore veritatis libero. Optio molestias aut distinctio quae at ea, tenetur ab, delectus tempora error, ut voluptas quia nisi!
+                    <Building campID={campID}/>
                 </App>
             </DesktopSim>
         </div>

@@ -7,8 +7,8 @@ import { Resizable } from "re-resizable";
 import { useEffect, useState } from "react";
 import { useDesktop } from "@/components/ui/desktop";
 import Image from "next/image";
-import { steps } from "motion";
 import { cn } from "@/lib/utils";
+import { ScrollArea } from "./scroll-area";
 
 export const App = (
   { appInfo, children, className, set }: 
@@ -169,7 +169,7 @@ const AppSim = (
         </span>
       </div>
       {/* body */}
-      {children}
+        {children}
     </Resizable>
   </div>)
 }

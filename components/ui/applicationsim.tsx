@@ -4,7 +4,7 @@ import { useDraggable } from "@/lib/hooks";
 import { Direction } from "re-resizable/lib/resizer";
 import { Minus, Square, X } from "lucide-react";
 import { Resizable } from "re-resizable";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDesktop } from "@/components/ui/desktop";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
@@ -87,11 +87,26 @@ const AppSim = (
   //the whole trash above is just the wrong way to get vars
 
   const desktop = useDesktop();
+  const [innerHeight, setInnerHeight] = useState<string | number>("100%");
+  const body = useRef(null);
+
+  useEffect(()=>{
+    setInHeight();
+  }, [body])
 
   const [lastInfo, setLastInfo] = useState<{pos : {x: number, y: number}, sizes: {width: string, height: string}}>
   ({pos : {x: 0, y: 0}, sizes : {width: "", height: ""}});
 
+  const setInHeight = () => {
+    setInnerHeight(draggableRef.current != undefined && activator.current != undefined ?
+      (draggableRef.current?.getBoundingClientRect().height! - activator.current?.getBoundingClientRect().height!)
+      :
+      "100%");
+       console.log("ciao")
+  }
+
   const handleResize = (e: MouseEvent | TouchEvent, dir: Direction, ref: HTMLElement) => {
+    setInHeight();
     if (ref.style.width !== "auto") {
       setWidth(ref.style.width);
     }
@@ -169,7 +184,9 @@ const AppSim = (
         </span>
       </div>
       {/* body */}
+      <div ref={body} className="overflow-y-scroll" style={{height: innerHeight}} >
         {children}
+      </div>
     </Resizable>
   </div>)
 }

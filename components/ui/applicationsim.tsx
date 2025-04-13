@@ -91,18 +91,19 @@ const AppSim = (
   const body = useRef(null);
 
   useEffect(()=>{
-    setInHeight();
+    setTimeout(setInHeight, 1)
   }, [body])
 
   const [lastInfo, setLastInfo] = useState<{pos : {x: number, y: number}, sizes: {width: string, height: string}}>
   ({pos : {x: 0, y: 0}, sizes : {width: "", height: ""}});
 
   const setInHeight = () => {
+    console.log("inner" + innerHeight)
+    console.log(draggableRef.current?.clientHeight)
     setInnerHeight(draggableRef.current != undefined && activator.current != undefined ?
       (draggableRef.current?.getBoundingClientRect().height! - activator.current?.getBoundingClientRect().height!)
       :
       "100%");
-       console.log("ciao")
   }
 
   const handleResize = (e: MouseEvent | TouchEvent, dir: Direction, ref: HTMLElement) => {
@@ -133,13 +134,15 @@ const AppSim = (
     }
     setPosition({x: 0, y: 0});
     setWidth("99.9vw")
-    setHeight((window.innerHeight-1) + "px");
+    setHeight((window.innerHeight-1) + "px");    
+    setTimeout(setInHeight, 1)
   }
 
   const handleLessSize = () => {
     setHeight(lastInfo.sizes.height)
     setWidth(lastInfo.sizes.width)
     setPosition(lastInfo.pos)
+    setTimeout(setInHeight, 1)
   }
 
   const isMax = (style.width == "99.9vw" && style.height == (window.innerHeight-1) + "px")
@@ -184,9 +187,9 @@ const AppSim = (
         </span>
       </div>
       {/* body */}
-      <div ref={body} className="overflow-y-scroll" style={{height: innerHeight}} >
+      <ScrollArea ref={body} style={{height: innerHeight}} >
         {children}
-      </div>
+      </ScrollArea>
     </Resizable>
   </div>)
 }

@@ -80,7 +80,6 @@ const BuildingHandler = ({ campID }: { campID: string }) => {
 }
 
 const DeleteButton = ({ buildingID }: { buildingID: string }) => {
-  const router = useRouter();
   return (
     <Button onClick={() => { deleteBuilding(buildingID)}} variant={'outline'}>
       <X />

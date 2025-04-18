@@ -195,14 +195,12 @@ export const fetchCampaignPlayerUser = async () =>  {
   const user = await fetchThisUser();
   if(!user) return redirect("/sign-in");
   const players = await fetchUserPlayers(user.id);
-  const camps = await fetchCampaigns();
   const ans : Campaign[] = [];
-  let tmp;
-  players?.forEach(player => {
-    tmp = camps?.find(camp => camp.id == player.id)
-    tmp !== undefined && ans.push(tmp);
-    }
-  )
+  if(!players) return [];
+  for(let i = 0; i < players.length; i++){
+    let tmp = await fetchCampaignByID(players[i].campaignID)
+    if(tmp) ans.push(tmp);
+  }
   return ans;
 }
 

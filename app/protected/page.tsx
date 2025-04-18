@@ -5,7 +5,6 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { insertCampaign } from "@/lib/data-insert";
-import Link from "next/link";
 import CampaingsTable from "@/components/camp-table";
 import ErrorComponent from "@/components/error-comp";
 import Tabs from "@/components/tabs";

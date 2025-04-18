@@ -13,16 +13,6 @@ export const DM = async ({ campID }: { campID: string }) => {
     const players = await fetchCampaignPlayers(campID);
     return (
         <div className="bg-[url(/wallpaper.png)] bg-cover">
-            {/* Welcome DM
-        {(pending != null && pending.length > 0) && 
-            <div className="grid">
-                {pending.map(req => 
-                <PendingHandler key={req.pending.id} req={req} className="flex flex-row gap-4 p-4">
-                </PendingHandler>
-                )
-                }
-            </div>
-        } */}
             <DesktopSim className="grid grid-cols-12 gap-8 p-8">
                 <App appInfo={{
                     icon: "/spugna.png",

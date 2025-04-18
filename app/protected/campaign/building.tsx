@@ -16,15 +16,17 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { deleteBuilding } from '@/lib/data-delete';
-import { useRouter } from 'next/navigation';
 import supabase from '@/utils/supabase/supabase';
+import { triggerAsyncId } from 'async_hooks';
+import { concat, isEmpty } from 'lodash';
 
 const BuildingHandler = ({ campID }: { campID: string }) => {
   const [buildings, setBuildings] = useState<Building[]>([]);
   const [total, setTotal] = useState(0);
+  const [trigger , setTrigger] = useState(false);
+  
   useEffect(() => {
     const builds = async () => {
-      const supabase = createClient();
       let { data: building, error } = await supabase
         .from('building')
         .select('*')
@@ -37,7 +39,7 @@ const BuildingHandler = ({ campID }: { campID: string }) => {
       }
     }
     builds()
-  }, [])
+  }, [trigger])
 
   useEffect(() => {
     const channels = supabase.channel('custom-all-channel')
@@ -45,8 +47,20 @@ const BuildingHandler = ({ campID }: { campID: string }) => {
       'postgres_changes',
       { event: '*', schema: 'public', table: 'building' , filter: 'campaignID=eq.' + campID},
       (payload) => {
-        console.log(payload)
-        setBuildings([...buildings, payload.new as Building])
+        if(isEmpty(payload.old)){
+          setBuildings(prev => [...prev, payload.new as Building])
+        }else{
+          setBuildings(prev => {
+            return prev.map(item => {
+              if(item.id === payload.old.id){
+                return payload.new as Building
+              }else{
+                return item
+              }
+            })
+
+          })
+        }
       }
     )
     .subscribe()

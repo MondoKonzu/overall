@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect, useState } from 'react'
+import React, { ReactNode, useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Building, Player } from '@/lib/types';
 import { createClient } from '@/utils/supabase/client';
@@ -16,10 +16,12 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { deleteBuilding } from '@/lib/data-delete';
-import { useRouter } from 'next/navigation'; 
+import { useRouter } from 'next/navigation';
+import supabase from '@/utils/supabase/supabase';
 
 const BuildingHandler = ({ campID }: { campID: string }) => {
-  const [buildings, setBuildings] = useState<Building[] | null>(null);
+  const [buildings, setBuildings] = useState<Building[]>([]);
+  const [total, setTotal] = useState(0);
   useEffect(() => {
     const builds = async () => {
       const supabase = createClient();
@@ -34,8 +36,32 @@ const BuildingHandler = ({ campID }: { campID: string }) => {
         setBuildings(building as Building[])
       }
     }
-    builds();
+    builds()
   }, [])
+
+  useEffect(() => {
+    const channels = supabase.channel('custom-all-channel')
+    .on(
+      'postgres_changes',
+      { event: '*', schema: 'public', table: 'building' , filter: 'campaignID=eq.' + campID},
+      (payload) => {
+        console.log(payload)
+        setBuildings([...buildings, payload.new as Building])
+      }
+    )
+    .subscribe()
+
+    return () => {
+      supabase.removeChannel(channels)
+    }
+  }, [supabase])
+
+  useEffect(() => {
+    if (buildings == null) return;
+    let ans = 0
+    buildings.forEach(build => ans += parseInt(build.earnatplayer));
+    setTotal(ans);
+  }, [buildings]);
   const toPlayer = () => {
     let ans = 0;
     buildings!.forEach(building => { ans += parseInt(building.earnatplayer) })
@@ -66,7 +92,7 @@ const BuildingHandler = ({ campID }: { campID: string }) => {
         <TableFooter>
           <TableRow>
             <TableCell colSpan={3}>Total</TableCell>
-            <TableCell className="text-right">$2,500.00</TableCell>
+            <TableCell className="text-right">{total}</TableCell>
           </TableRow>
         </TableFooter>
       </Table>
@@ -81,7 +107,7 @@ const BuildingHandler = ({ campID }: { campID: string }) => {
 
 const DeleteButton = ({ buildingID }: { buildingID: string }) => {
   return (
-    <Button onClick={() => { deleteBuilding(buildingID)}} variant={'outline'}>
+    <Button onClick={() => { deleteBuilding(buildingID) }} variant={'outline'}>
       <X />
     </Button>
   )

@@ -20,7 +20,7 @@ import supabase from '@/utils/supabase/supabase';
 import { triggerAsyncId } from 'async_hooks';
 import { concat, isEmpty } from 'lodash';
 
-const BuildingHandler = ({ campID }: { campID: string }) => {
+const BuildingHandler = ({ campID, isDM = false }: { campID: string, isDM?: boolean }) => {
   const [buildings, setBuildings] = useState<Building[]>([]);
   const [total, setTotal] = useState(0);
   const [trigger , setTrigger] = useState(false);
@@ -90,7 +90,10 @@ const BuildingHandler = ({ campID }: { campID: string }) => {
             <TableHead className="w-[100px]">Invoice</TableHead>
             <TableHead>Status</TableHead>
             <TableHead>Method</TableHead>
-            <TableHead className="text-right">Delete</TableHead>
+            {
+              isDM &&
+              <TableHead className="text-right">Delete</TableHead>
+            }
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -99,7 +102,10 @@ const BuildingHandler = ({ campID }: { campID: string }) => {
               <TableCell className="font-medium">{build.name}</TableCell>
               <TableCell>{build.priceatplayer}</TableCell>
               <TableCell>{build.earnatplayer}</TableCell>
-              <TableCell><DeleteButton buildingID={build.id} /></TableCell>
+              {
+                isDM &&
+                <TableCell><DeleteButton buildingID={build.id} /></TableCell>
+              }
             </TableRow>
           ))}
         </TableBody>
@@ -110,9 +116,12 @@ const BuildingHandler = ({ campID }: { campID: string }) => {
           </TableRow>
         </TableFooter>
       </Table>
-      <Button onClick={() => { addEddieToParty(toPlayer(), campID) }} variant={'outline'}>
+      {
+        isDM && 
+        <Button onClick={() => { addEddieToParty(toPlayer(), campID) }} variant={'outline'}>
         Get Check {toPlayer()}
       </Button>
+      }
     </div>
   )
     :

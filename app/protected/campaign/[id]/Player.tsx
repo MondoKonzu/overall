@@ -1,14 +1,17 @@
 import { App } from "@/components/ui/applicationsim"
 import DesktopSim from "@/components/ui/desktop"
 import { Campaign, Player } from "@/lib/types"
+import { useState } from "react"
+import BuildingHandler from "../building"
+import { fetchCampaignPlayers } from "@/lib/data-fetcher"
 
-export const PlayerPage = ({ players, campaign }: { players: Player[] | null, campaign: Campaign | null }) => {
-
+export const PlayerPage = async ({campaign }: {campaign: Campaign | null }) => {
+    const players = await fetchCampaignPlayers(campaign!.id)
     if (!players || !campaign) return <div>Not found</div>
     return (
         <div className="bg-[url(/wallpaper.png)] bg-cover">
             <DesktopSim className="grid grid-cols-12 gap-8 p-8">
-                <App appInfo={{appName: "party", icon: "/spugna.png", id: "1", status: "close"}}
+                <App appInfo={{appName: "camp:" + campaign.name, icon: "/spugna.png", id: "1", status: "close"}}
                     set={{width: "30vw"}}                    
                 >
                     <div className="p-12">
@@ -20,6 +23,9 @@ export const PlayerPage = ({ players, campaign }: { players: Player[] | null, ca
                             )}
                         </div>
                     </div>
+                </App>
+                <App appInfo={{appName: "buildings", icon:"/spugna.png", id: "2", status: "close"}}>
+                    <BuildingHandler campID={campaign.id}/>
                 </App>
             </DesktopSim>
         </div>

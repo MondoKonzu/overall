@@ -47,7 +47,7 @@ export default async function Page({
     if(ava == -1) {
         return <NewUser campID={id} user={user}/>
     }else if(ava == 0){
-        return  <PlayerPage campaign={campaign} players={players}/>
+        return  <PlayerPage campaign={campaign}/>
     }else{
         return <DM campID={campaign!.id}/>
     }

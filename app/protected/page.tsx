@@ -8,6 +8,8 @@ import { insertCampaign } from "@/lib/data-insert";
 import CampaingsTable from "@/components/camp-table";
 import ErrorComponent from "@/components/error-comp";
 import Tabs from "@/components/tabs";
+import { User } from "@supabase/supabase-js";
+import { Campaign } from "@/lib/types";
 
 export default async function ProtectedPage() {
   const user = await fetchThisUser();
@@ -24,7 +26,7 @@ export default async function ProtectedPage() {
             { trigger: "User Info", body: <Usercard/>},
             { trigger: "Le tue campagne", body: <CampaignDmInfo />},
             { trigger: "Le campagne dove giochi", body: <CampUserPlayer /> ,isActive: true},
-            { trigger: "Entra in nuove campagne", body: <CampsJoin />},
+            { trigger: "Entra in nuove campagne", body: <CampsJoin user={user} />},
           ]}
         </Tabs>
       </div>
@@ -63,8 +65,12 @@ const CampUserPlayer = async () => {
   )
 }
 
-const CampsJoin = async () => {
-  const camps = await fetchCampaigns()
+const CampsJoin = async ({user} : {user : User | null}) => {
+  if(!user) redirect("/sign-in")
+  let userCampaigns = await fetchCampaignPlayerUser();
+  let camps = await fetchCampaigns()
+  camps = camps?.filter(camp => camp.masterID != user.id) || camps;
+  camps = camps?.filter(camp => !(userCampaigns.find(campP => campP.id == camp.id))) || camps;
   if(camps == null) return <ErrorComponent/>
   return (
     <div className="grid grid-cols-2">

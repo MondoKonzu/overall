@@ -61,7 +61,7 @@ export const DM = async ({ campID }: { campID: string }) => {
                         {[
                             {
                             trigger: "All", className: "border-none p-0", body:
-                                <BuildingHandler campID={campID}/>
+                                <BuildingHandler isDM campID={campID}/>
                         },
                         {
                             trigger: "Form", className: "border-none p-0", body:

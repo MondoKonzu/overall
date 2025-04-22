@@ -86,13 +86,13 @@
 
   .cut-edge-2{
     @apply rounded-none;
-    clip-path: polygon(0% 0%,94% 0%, 100% 51%, 100% 100%, 7% 100%, 0% 40%) !important;
+    clip-path: polygon(0% 0%,calc(100% - 1.3rem) 0%, 100% calc(100% - 1.35rem), 100% 100%, 1.5rem 100%, 0% calc(100% - 1.35rem)) !important;
     /* clip-path: polygon(0% 0%,92.5% 0%, 100% 50%, 100% 100%, 8% 100%, 0% 44%) !important; */
   }
 
   .cut-edge-3{
     @apply rounded-none;
-    clip-path: polygon(0% 0%,94.5% 0%, 100% 56%, 100% 100%, 6.5% 100%, 0% 34%) !important;
+    clip-path: polygon(0% 0%,calc(100% - 1.3rem) 0%, 100% calc(100% - 0.9rem), 100% 100%, 1.5rem 100%, 0% calc(100% - 1.35rem)) !important;
     /* clip-path: polygon(0% 0%,95% 0%, 100% 51%, 100% 100%, 6.5% 100%, 0% 37%) !important; */
   }
 

@@ -92,7 +92,7 @@ const BuildingHandler = ({ campID, isDM = false }: { campID: string, isDM?: bool
             <TableHead>Method</TableHead>
             {
               isDM &&
-              <TableHead className="text-right">Delete</TableHead>
+              <TableHead>Delete</TableHead>
             }
           </TableRow>
         </TableHeader>
@@ -112,7 +112,7 @@ const BuildingHandler = ({ campID, isDM = false }: { campID: string, isDM?: bool
         <TableFooter>
           <TableRow>
             <TableCell colSpan={3}>Total</TableCell>
-            <TableCell className="text-right">{total}</TableCell>
+            <TableCell>{total}</TableCell>
           </TableRow>
         </TableFooter>
       </Table>

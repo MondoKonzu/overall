@@ -11,14 +11,19 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { insertBuilding } from "@/lib/data-insert";
+import { getBuilingCompiled, insertBuilding } from "@/lib/data-insert";
 import { useEffect, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
+import { Player } from "@/lib/types";
+import supabase from "@/utils/supabase/supabase";
+import { addEddieToParty } from "@/lib/data-update";
 
 export default function FormBuilding({campID}:{campID : string}) {
 
     const [buildingtype, setBuildingType] = useState<any[]>([]);
+    const [players, setPlayers] = useState<Player[]>([]);
     const [sizes, setSizes] = useState<any[]>([]);
+    const [insert, setInsert] = useState<{msg: string, isVisible: boolean}>({msg: "Palazzo Aggiunto con successo", isVisible: false})
 
     useEffect(() => {
         const setBuild = async () => {
@@ -35,9 +40,38 @@ export default function FormBuilding({campID}:{campID : string}) {
           .select('*');
           setSizes(data != null ? data : []);
         }
+        const getPlayers = async () => {
+          const supa = createClient();
+          const {data, error} = await supa
+          .from("player")
+          .select("*")
+          .eq("campaignID", campID);
+          if(data != null)setPlayers(data) 
+        }
+        getPlayers()
         setSize()
         setBuild()
     } , [])
+
+    const handleFormAction = (e : FormData) => {
+      if(players.length == 0) return
+      e.append("campID", campID)
+      const build = getBuilingCompiled(e);
+      build.then()
+      
+      .then(data => {
+        let res= players.find(player => player.eddie < data.priceatplayer)
+        if(res == undefined){
+          insertBuilding(data);
+          setInsert({msg: insert.msg + " con prezzo di " + data.priceatplayer + "per ogni giocatore ", isVisible: true})
+          addEddieToParty((-1*parseInt(data.priceatplayer)), campID);
+        }else{
+          setInsert({msg: "Impossibile creare il palazzo poiché " + res.name + 
+            " non ha abbastanza eddie, questo palazzo richiede " + data.priceatplayer + " eddie"
+            , isVisible: true})
+        }
+      })
+    }
 
   return (
     <div>
@@ -48,8 +82,14 @@ export default function FormBuilding({campID}:{campID : string}) {
           <Input placeholder="Factory4$" name="name" required></Input>
           {SelectType(buildingtype)}
           {SelectSize(sizes)}
-          <Button formAction={(e) => {e.append("campID", campID), insertBuilding(e)}}>Submit</Button>
+          <Button formAction={handleFormAction}>Submit</Button>
         </form>
+        {
+          insert.isVisible &&
+            <div>
+              {insert.msg}
+            </div>
+        }
       </div>
     </div>
   );

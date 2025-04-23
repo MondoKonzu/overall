@@ -16,7 +16,7 @@ export const DM = async ({ campID }: { campID: string }) => {
             <DesktopSim className="grid grid-cols-12 gap-8 p-8">
                 <App appInfo={{
                     icon: "/spugna.png",
-                    appName: "11", status: "close", id: "1"
+                    appName: "Party", status: "close", id: "1"
                 }}
                     set={{ width: "fit-content", height: "40vh" }}
                 >
@@ -53,7 +53,7 @@ export const DM = async ({ campID }: { campID: string }) => {
                 </App>
                 <App appInfo={{
                     icon: "/spugna.png",
-                    appName: "22", status: "close", id: "2"
+                    appName: "Buildings", status: "close", id: "2"
                 }}
                     set={{ width: "50vw", height: "75vh", position: {x:10, y:10}}}
                 >

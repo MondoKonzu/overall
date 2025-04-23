@@ -9,11 +9,11 @@ export const PlayerPage = async ({campaign }: {campaign: Campaign | null }) => {
     const players = await fetchCampaignPlayers(campaign!.id)
     if (!players || !campaign) return <div>Not found</div>
     return (
-        <div className="bg-[url(/wallpaper.png)] bg-cover">
+        <div className="bg-[url(/wallpaper-player.png)] bg-cover">
             <DesktopSim className="grid grid-cols-12 gap-8 p-8">
                 <App appInfo={{appName: "camp:" + campaign.name, icon: "/spugna.png", id: "1", status: "close"}}
                     set={{width: "30vw"}}                    
-                >
+                    >
                     <div className="p-12">
                         <h1>Campaign's name: {campaign.name}</h1>
                         <div>
@@ -24,7 +24,9 @@ export const PlayerPage = async ({campaign }: {campaign: Campaign | null }) => {
                         </div>
                     </div>
                 </App>
-                <App appInfo={{appName: "buildings", icon:"/spugna.png", id: "2", status: "close"}}>
+                <App appInfo={{appName: "buildings", icon:"/spugna.png", id: "2", status: "close"}}
+                    set={{ width: "50vw", height: "75vh", position: {x:10, y:10}}}
+                >
                     <BuildingHandler campID={campaign.id}/>
                 </App>
             </DesktopSim>

@@ -1,5 +1,5 @@
 import { createClient } from "@/utils/supabase/server";
-import { BuildingType, Campaign, Pending, Player, RelatedPendings, Sizes } from "./types";
+import { Building, BuildingType, Campaign, Pending, Player, RelatedPendings, Sizes } from "./types";
 import { redirect } from "next/navigation";
 
 /**
@@ -25,7 +25,7 @@ export const fetchPlayers = async () => {
  * Search the DB for every building type
  * @returns null in case of error, an array of {id, price, earn, typename} otherwise
  */
-export const fetchBulidingType = async() => {
+export const fetchBuilidingType = async() => {
   const supabase = await createClient();
 let { data: buildingtypes, error } = await supabase
   .from('building-type')
@@ -195,13 +195,21 @@ export const fetchCampaignPlayerUser = async () =>  {
   const user = await fetchThisUser();
   if(!user) return redirect("/sign-in");
   const players = await fetchUserPlayers(user.id);
-  const camps = await fetchCampaigns();
   const ans : Campaign[] = [];
-  let tmp;
-  players?.forEach(player => {
-    tmp = camps?.find(camp => camp.id == player.id)
-    tmp !== undefined && ans.push(tmp);
-    }
-  )
+  if(!players) return [];
+  for(let i = 0; i < players.length; i++){
+    let tmp = await fetchCampaignByID(players[i].campaignID)
+    if(tmp) ans.push(tmp);
+  }
   return ans;
+}
+
+export const fetchBuildings = async () => {
+  const supabase = await createClient();
+  let { data: building, error } = await supabase
+  .from('building')
+  .select('*');
+
+  if(error) return null;
+  return building as Building[];         
 }

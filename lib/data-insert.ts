@@ -6,11 +6,12 @@ import { fetchThisUser } from "./data-fetcher";
 import { Palanquin } from "next/font/google";
 import { RelatedPendings } from "./types";
 
-export const insertBuilding = async (formData : FormData) : Promise<any> => {
+export const getBuilingCompiled = async (formData : FormData) : Promise<any> => {
     const supabase = await createClient();
     const name = formData.get("name")!.toString();
     const type = formData.get("type")!.toString();
     const size = formData.get("size")!.toString();
+    const campID = formData.get("campID")!.toString();
     const typeID = await getIdbyTypeName(type);
     const priceEarn = await getBuildingRow(type);
     const multiplier = await getMultuplierRow(size); 
@@ -18,25 +19,21 @@ export const insertBuilding = async (formData : FormData) : Promise<any> => {
     if(!priceEarn || !multiplier || !typeID) {
         return null;
     }
+    const ans =  { name: name, typeID: typeID, sizeID: size,
+        earnatplayer: (priceEarn[1] * multiplier),
+        priceatplayer: (priceEarn[0] * multiplier),
+        campaignID: campID
+    }
+    return ans;
+}
 
-    console.log("ok", name + type + size)
-
+export const insertBuilding = async (compiledBuild: {}) => {
+    const supabase = await createClient();
     const { data, error } = await supabase
     .from('building')
-    .insert([
-    { name: name, typeID: typeID, sizeID: size,
-        earnatplayer: (priceEarn[1] * multiplier),
-        priceatplayer: (priceEarn[0] * multiplier) 
-     },
-  ])
-  .select()
-
-//   if(error){
-//     return redirect("/nobuono")
-//   }
-//   return redirect("/buono")
-
+    .insert([compiledBuild,])
 }
+
 
 //returns an array of [price, earn] for the building
 //type given in input as a string

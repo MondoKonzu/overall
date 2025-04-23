@@ -5,7 +5,7 @@ import { fetchCampaignByID, fetchCampaignPending, fetchCampaignPlayers, fetchThi
 import { User } from "@supabase/supabase-js";
 import { redirect } from "next/navigation";
 import { DM } from "./DM";
-import { Player } from "./Player";
+import { PlayerPage } from "./Player";
 import { NewUser } from "./NewUser";
 
 /**
@@ -47,7 +47,7 @@ export default async function Page({
     if(ava == -1) {
         return <NewUser campID={id} user={user}/>
     }else if(ava == 0){
-        return  <Player campaign={campaign} players={players}/>
+        return  <PlayerPage campaign={campaign}/>
     }else{
         return <DM campID={campaign!.id}/>
     }

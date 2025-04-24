@@ -1,8 +1,6 @@
 "use server"
 
-import FormPlayer from "@/components/formPlayer";
 import { fetchCampaignByID, fetchCampaignPending, fetchCampaignPlayers, fetchThisUser, fetchUserPlayers } from "@/lib/data-fetcher"
-import { User } from "@supabase/supabase-js";
 import { redirect } from "next/navigation";
 import { DM } from "./DM";
 import { PlayerPage } from "./Player";
@@ -39,13 +37,14 @@ export default async function Page({
     const campaign = await fetchCampaignByID(id);
     const players = await fetchCampaignPlayers(id);
     const ava = await checkAva(campaign, players);
+    const pendings = await fetchCampaignPending(campaign!.id);
 
     if(user == null){
         return redirect("/sign-in");
     }
 
     if(ava == -1) {
-        return <NewUser campID={id} user={user}/>
+        return <NewUser pendings={pendings} camp={campaign!} user={user}/>
     }else if(ava == 0){
         return  <PlayerPage campaign={campaign}/>
     }else{

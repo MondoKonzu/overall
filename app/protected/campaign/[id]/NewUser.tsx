@@ -1,43 +1,43 @@
+"use client"
 import FormPlayer from "@/components/formPlayer";
-import { App } from "@/components/ui/applicationsim";
-import DesktopSim from "@/components/ui/desktop";
-import { fetchCampaignPending } from "@/lib/data-fetcher";
+import {Campaign, RelatedPendings } from "@/lib/types";
 import { User } from "@supabase/supabase-js";
+import { useGlitch } from "react-powerglitch";
 
-export const NewUser = async ({ campID, user }: { campID: string, user: User }) => {
+export const NewUser = ({ camp, user,pendings }: { camp: Campaign, user: User , pendings: RelatedPendings[] | null}) => {
+    const genGlitch = useGlitch({
+        "hideOverflow": true,
+        "timing": {
+          "duration": 8000
+        },
+      })
+
     let alreadyInList = -1;
-    const pendings = await fetchCampaignPending(campID);
     if (pendings != null && pendings.length > 0) {
         alreadyInList = pendings.findIndex(pend => pend.player.userID == user.id)
     }
-    if (alreadyInList == -1) {
-        return (
-            <DesktopSim className="p-20">
-                {
-                    alreadyInList == -1 ?
-                        <App appInfo={{ appName: "New Player", icon: "/spugna.png", id: "1", status: "close" }}>
-                            <div className="p-12">
-                                <h2>You are not a player for this campaign</h2>
-                                <p>do you want to join?</p>
-                                <FormPlayer className="mt-8" campID={campID} />
-                            </div>
-                        </App>
+    return (
+        <div ref={genGlitch.ref} className="w-[100vw] pt-20 h-[100vh] bg-[url(/error-wallpaper.png)] bg-cover overflow-hidden"> 
+            <div className="w-[75vw] cut-edge-app backdrop-blur-sm bg-black/50 mx-auto">
+            {
+                alreadyInList == -1 ?
+                        <div className="p-12">
+                            <h2>You are not a player for {camp.name}</h2>
+                            <p>do you want to join?</p>
+                            <FormPlayer className="mt-8" campID={camp.id} />
+                        </div>
                     :
-                        <App appInfo={{ appName: "Wait", icon: "/spugna.png", id: "2", status: "close" }}>
+                        <div className="p-10">
+                            <h2 className="text-3xl">A request was already sent</h2>
+                            <p>Now wait for the DM of {camp.name} to accept it</p>
+                            <h3 className="text-xl">PG:</h3>
                             <div>
-                                <h2 className="text-3xl">A request was already sent</h2>
-                                <p>Now wait for the DM to accept it</p>
-                                <h3 className="text-xl">PG:</h3>
-                                <div>
-                                    <p>{pendings![alreadyInList].player.name}</p>
-                                    <p>{pendings![alreadyInList].player.eddie}</p>
-                                </div>
+                                <p>{pendings![alreadyInList].player.name}</p>
+                                <p>{pendings![alreadyInList].player.eddie}</p>
                             </div>
-                        </App>
-                }
-            </DesktopSim>
-        )
-
-
-    }
+                        </div>
+            }
+            </div>
+        </div>
+    )
 }

@@ -40,9 +40,9 @@ const Navigate = () => {
             </div>
             <div className='bg-red-950/15 min-h-screen top-0 text-center grid '>
                 {user == null ? 
-                <br />
+                <div className='row-span-3'/>
                   :
-                <UserCard className='w-10/12 mx-auto text-left'/>
+                <UserCard className='mt-5 px-4 w-10/12 mx-auto text-left'/>
               }
               <ModeToggle />
               <BtnNav linkTo='/' onClick={handleClick}>Home</BtnNav>

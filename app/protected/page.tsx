@@ -20,7 +20,7 @@ export default async function ProtectedPage() {
 
   return (
       <div className="px-16">
-        <Tabs>
+        <Tabs className="mt-10">
           {[
             { trigger: "Le tue campagne", body: <CampaignDmInfo />},
             { trigger: "Le campagne dove giochi", body: <CampUserPlayer /> ,isActive: true},
@@ -34,7 +34,7 @@ export default async function ProtectedPage() {
 const CampaignDmInfo = async () => {
   const campaigns = await fetchCampaignDmUser();
   return (
-    <div className="grid grid-cols-2">
+    <div className="grid md:grid-cols-2">
       <div>
         <h3>Campagne di cui sei Master</h3>
         <CampaingsTable camps={campaigns} />
@@ -59,7 +59,9 @@ const CampaignDmInfo = async () => {
 const CampUserPlayer = async () => {
   const camp = await fetchCampaignPlayerUser();
   return (
-    <CampaingsTable camps={camp}/>
+    <div className="w-11/12 md:w-9/12 mx-auto">
+      <CampaingsTable camps={camp}/>
+    </div>
   )
 }
 
@@ -71,9 +73,8 @@ const CampsJoin = async ({user} : {user : User | null}) => {
   camps = camps?.filter(camp => !(userCampaigns.find(campP => campP.id == camp.id))) || camps;
   if(camps == null) return <ErrorComponent/>
   return (
-    <div className="grid grid-cols-2">
+    <div className="w-11/12 md:w-9/12 mx-auto">
       <CampaingsTable camps={camps} />
-      <div></div>
     </div>
   )
 }

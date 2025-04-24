@@ -1,8 +1,7 @@
 "use client"
-import React, { ReactNode, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
-import { Building, Player } from '@/lib/types';
-import { createClient } from '@/utils/supabase/client';
+import { Building } from '@/lib/types';
 import { addEddieToParty } from '@/lib/data-update';
 import { X } from 'lucide-react';
 import {
@@ -17,8 +16,7 @@ import {
 } from "@/components/ui/table"
 import { deleteBuilding } from '@/lib/data-delete';
 import supabase from '@/utils/supabase/supabase';
-import { triggerAsyncId } from 'async_hooks';
-import { concat, isEmpty } from 'lodash';
+import { isEmpty } from 'lodash';
 
 const BuildingHandler = ({ campID, isDM = false }: { campID: string, isDM?: boolean }) => {
   const [buildings, setBuildings] = useState<Building[]>([]);
@@ -46,7 +44,7 @@ const BuildingHandler = ({ campID, isDM = false }: { campID: string, isDM?: bool
     .on(
       'postgres_changes',
       { event: '*', schema: 'public', table: 'building' , filter: 'campaignID=eq.' + campID},
-      (payload) => {
+      (payload: any) => {
         if(isEmpty(payload.old)){
           setBuildings(prev => [...prev, payload.new as Building])
         }else{

@@ -1,5 +1,4 @@
 import { redirect } from "next/navigation";
-import Usercard from "@/components/usercard";
 import { fetchThisUser, fetchCampaignDmUser, fetchCampaigns, fetchCampaignPlayerUser } from "@/lib/data-fetcher";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -9,7 +8,7 @@ import CampaingsTable from "@/components/camp-table";
 import ErrorComponent from "@/components/error-comp";
 import Tabs from "@/components/tabs";
 import { User } from "@supabase/supabase-js";
-import { Campaign } from "@/lib/types";
+import UserCard from "@/components/user-card";
 
 export default async function ProtectedPage() {
   const user = await fetchThisUser();
@@ -23,7 +22,6 @@ export default async function ProtectedPage() {
       <div className="px-16">
         <Tabs>
           {[
-            { trigger: "User Info", body: <Usercard/>},
             { trigger: "Le tue campagne", body: <CampaignDmInfo />},
             { trigger: "Le campagne dove giochi", body: <CampUserPlayer /> ,isActive: true},
             { trigger: "Entra in nuove campagne", body: <CampsJoin user={user} />},

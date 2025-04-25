@@ -9,8 +9,8 @@ import { redirect } from "next/navigation";
 
 export default async function Login() {
   const supa = await createClient();
-  let user = await supa.auth.getUser();
-  if(user.data) redirect("/")
+  let res = await supa.auth.getUser();
+  res.data.user != null && redirect("/")
   return (
     <form className="flex-1 flex flex-col min-w-64 max-w-[32rem] mt-10 mx-auto">
       <h1 className="text-2xl font-medium">Sign in</h1>

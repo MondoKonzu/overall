@@ -19,7 +19,7 @@ export default async function ProtectedPage() {
 
 
   return (
-      <div className="px-16">
+      <div className="lg:px-16">
         <Tabs className="mt-10">
           {[
             { trigger: "Le tue campagne", body: <CampaignDmInfo />},

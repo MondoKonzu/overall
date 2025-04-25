@@ -3,12 +3,16 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
+import { createClient } from "@/utils/supabase/server";
+import { redirect } from "next/navigation";
 
-export default async function Login(props: { searchParams: Promise<any> }) {
-  const searchParams = await props.searchParams;
+
+export default async function Login() {
+  const supa = await createClient();
+  let user = await supa.auth.getUser();
+  if(user.data) redirect("/")
   return (
-    <div className="w-[100vw] grid">
-          <form className="flex-1 flex flex-col min-w-64 mt-10 mx-auto">
+    <form className="flex-1 flex flex-col min-w-64 max-w-[32rem] mt-10 mx-auto">
       <h1 className="text-2xl font-medium">Sign in</h1>
       <p className="text-sm text-foreground">
         Don't have an account?{" "}
@@ -39,6 +43,5 @@ export default async function Login(props: { searchParams: Promise<any> }) {
         </Button>
       </div>
     </form>
-    </div>
   );
 }

@@ -3,22 +3,15 @@ import Link from "next/link";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { createClient } from "@/utils/supabase/server";
+import { redirect } from "next/navigation";
 
-export default async function Signup(props: {
-  searchParams: Promise<any>;
-}) {
-  const searchParams = await props.searchParams;
-  if ("message" in searchParams) {
-    return (
-      <div className="w-full flex-1 flex items-center h-screen sm:max-w-md justify-center gap-2 p-4">
-        Not handled
-      </div>
-    );
-  }
-
+export default async function Signup() {
+  const supa = await createClient();
+  let user = await supa.auth.getUser();
+  if(user.data) redirect("/")
   return (
-    <>
-      <form className="flex flex-col min-w-64 max-w-64 mx-auto">
+      <form className="flex flex-col min-w-64 max-w-[32rem] mx-auto">
         <h1 className="text-2xl font-medium">Sign up</h1>
         <p className="text-sm text text-foreground">
           Already have an account?{" "}
@@ -44,6 +37,5 @@ export default async function Signup(props: {
           </Button>
         </div>
       </form>
-    </>
   );
 }

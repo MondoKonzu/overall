@@ -4,6 +4,7 @@ import { Campaign, Player } from "@/lib/types"
 import { useState } from "react"
 import BuildingHandler from "../building"
 import { fetchCampaignPlayers } from "@/lib/data-fetcher"
+import { CampaignContext, CampaignProvider } from "../CampaignContext"
 
 export const PlayerPage = async ({campaign }: {campaign: Campaign | null }) => {
     const players = await fetchCampaignPlayers(campaign!.id)
@@ -27,7 +28,9 @@ export const PlayerPage = async ({campaign }: {campaign: Campaign | null }) => {
                 <App appInfo={{appName: "buildings", icon:"/spugna.png", id: "2", status: "close"}}
                     set={{ width: "50vw", height: "75vh", position: {x:10, y:10}}}
                 >
-                    <BuildingHandler campID={campaign.id}/>
+                    <CampaignProvider campID={campaign.id}>
+                        <BuildingHandler campID={campaign.id}/>
+                    </CampaignProvider>
                 </App>
             </DesktopSim>
         </div>

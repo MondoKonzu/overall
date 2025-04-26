@@ -12,46 +12,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { getBuilingCompiled, insertBuilding } from "@/lib/data-insert";
-import { useEffect, useState } from "react";
-import { createClient } from "@/utils/supabase/client";
-import { Player } from "@/lib/types";
-import supabase from "@/utils/supabase/supabase";
+import { useState } from "react";
+import { BuildingType, Player, Sizes } from "@/lib/types";
 import { addEddieToParty } from "@/lib/data-update";
 
-export default function FormBuilding({campID}:{campID : string}) {
-
-    const [buildingtype, setBuildingType] = useState<any[]>([]);
-    const [players, setPlayers] = useState<Player[]>([]);
-    const [sizes, setSizes] = useState<any[]>([]);
+export default function FormBuilding({campID, buildingtype, players, sizes}:{campID : string,buildingtype: BuildingType[],players: Player[], sizes: Sizes[]}) {
     const [insert, setInsert] = useState<{msg: string, isVisible: boolean}>({msg: "Palazzo Aggiunto con successo", isVisible: false})
-
-    useEffect(() => {
-        const setBuild = async () => {
-            const supa = createClient();
-            const {data , error} = await supa
-            .from('building-type')
-            .select('*')
-            setBuildingType(data != null ? data : []);
-        }
-        const setSize = async () => {
-          const supa = createClient();
-          const {data , error} = await supa
-          .from('sizes')
-          .select('*');
-          setSizes(data != null ? data : []);
-        }
-        const getPlayers = async () => {
-          const supa = createClient();
-          const {data, error} = await supa
-          .from("player")
-          .select("*")
-          .eq("campaignID", campID);
-          if(data != null)setPlayers(data) 
-        }
-        getPlayers()
-        setSize()
-        setBuild()
-    } , [])
 
     const handleFormAction = (e : FormData) => {
       if(players.length == 0) return

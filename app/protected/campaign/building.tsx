@@ -17,56 +17,12 @@ import {
 import { deleteBuilding } from '@/lib/data-delete';
 import supabase from '@/utils/supabase/supabase';
 import { isEmpty } from 'lodash';
+import { useCampaignContext } from './CampaignContext';
 
 const BuildingHandler = ({ campID, isDM = false }: { campID: string, isDM?: boolean }) => {
-  const [buildings, setBuildings] = useState<Building[]>([]);
+  const buildings = useCampaignContext().buildings.buildings 
   const [total, setTotal] = useState(0);
-  const [trigger , setTrigger] = useState(false);
-  
-  useEffect(() => {
-    const builds = async () => {
-      let { data: building, error } = await supabase
-        .from('building')
-        .select('*')
-        .eq("campaignID", campID)
-
-      if (error) {
-        setBuildings([])
-      } else {
-        setBuildings(building as Building[])
-      }
-    }
-    builds()
-  }, [trigger])
-
-  useEffect(() => {
-    const channels = supabase.channel('custom-all-channel')
-    .on(
-      'postgres_changes',
-      { event: '*', schema: 'public', table: 'building' , filter: 'campaignID=eq.' + campID},
-      (payload: any) => {
-        if(isEmpty(payload.old)){
-          setBuildings(prev => [...prev, payload.new as Building])
-        }else{
-          setBuildings(prev => {
-            return prev.map(item => {
-              if(item.id === payload.old.id){
-                return payload.new as Building
-              }else{
-                return item
-              }
-            })
-
-          })
-        }
-      }
-    )
-    .subscribe()
-
-    return () => {
-      supabase.removeChannel(channels)
-    }
-  }, [supabase])
+  const party = useCampaignContext().party.party
 
   useEffect(() => {
     if (buildings == null) return;
@@ -116,7 +72,16 @@ const BuildingHandler = ({ campID, isDM = false }: { campID: string, isDM?: bool
       </Table>
       {
         isDM && 
-        <Button onClick={() => { addEddieToParty(toPlayer(), campID) }} variant={'outline'}>
+        <Button onClick={() => { 
+          if(toPlayer() < 0){
+            let tmp = toPlayer()*-1
+            if(party.find(player => parseInt(player.eddie) < tmp) != undefined){
+              console.log("nah")
+              return
+            }
+          }
+            addEddieToParty(toPlayer(), campID)
+         }} variant={'outline'}>
         Get Check {toPlayer()}
       </Button>
       }

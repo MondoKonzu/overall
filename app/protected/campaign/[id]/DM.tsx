@@ -1,5 +1,5 @@
 import { App } from "@/components/ui/applicationsim";
-import { fetchCampaignPending, fetchCampaignPlayers } from "@/lib/data-fetcher";
+import { fetchBuilidingType, fetchCampaignPending, fetchCampaignPlayers, fetchSizes } from "@/lib/data-fetcher";
 import {ModifyPlayer, PendingHandler} from "../playerHandler";
 import DesktopSim from "../../../../components/ui/desktop";
 import Building from "../building";
@@ -7,12 +7,16 @@ import Tabs from "@/components/tabs";
 import FormBuilding from "@/components/formBuildings";
 import BuildingHandler from "../building";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { CampaignProvider } from "../CampaignContext";
 
 export const DM = async ({ campID }: { campID: string }) => {
     const pending = await fetchCampaignPending(campID);
     const players = await fetchCampaignPlayers(campID);
+    const sizes = await fetchSizes();
+    const types = await fetchBuilidingType();
     return (
         <div className="bg-[url(/wallpaper.png)] bg-cover">
+            <CampaignProvider campID={campID}>
             <DesktopSim className="grid grid-cols-12 gap-8 p-8">
                 <App appInfo={{
                     icon: "/spugna.png",
@@ -65,12 +69,13 @@ export const DM = async ({ campID }: { campID: string }) => {
                         },
                         {
                             trigger: "Form", className: "border-none p-0", body:
-                                <FormBuilding campID={campID} />
+                                <FormBuilding buildingtype={types!} players={players!} sizes={sizes!} campID={campID} />
                         }
                         ]}
                     </Tabs>
                 </App>
             </DesktopSim>
+            </CampaignProvider>
         </div>
     )
 }

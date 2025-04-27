@@ -11,7 +11,7 @@ export const PlayerPage = async ({campaign }: {campaign: Campaign | null }) => {
     if (!players || !campaign) return <div>Not found</div>
     return (
         <div className="bg-[url(/wallpaper-player.png)] bg-cover">
-            <DesktopSim className="grid grid-cols-12 gap-8 p-8">
+            <DesktopSim>
                 <App appInfo={{appName: "camp:" + campaign.name, icon: "/spugna.png", id: "1", status: "close"}}
                     set={{width: "30vw"}}                    
                     >

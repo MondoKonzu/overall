@@ -45,7 +45,7 @@ export const App = (
 
         {/* Icon */}
         <div onClick={openApp} style={{ cursor: "pointer" }}>
-          <Image alt={appInfo.appName} width={"50"} height={"50"} src={appInfo.icon} />
+          <Image className="min-w-12" alt={appInfo.appName} width={"50"} height={"50"} src={appInfo.icon} />
         </div>
         
         {/* Main app */}

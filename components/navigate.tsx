@@ -9,23 +9,16 @@ import { signOutAction } from '@/lib/actions'
 import { User } from '@supabase/supabase-js'
 import { createClient } from '@/utils/supabase/client'
 import UserCard from './user-card'
+import { useAuth } from '@/app/AuthContext'
 
 
 
 const Navigate = () => {
-  const [user, setUser] = useState<User | null>(null);
   const [isVisible, setIsVisible] = useState(false)
+  const { user, forceLogout } = useAuth()
   const handleClick = () => {
     setIsVisible(!isVisible)
   }
-  useEffect(() => {
-    const supabase = createClient();
-    const getUser = async () => {
-      const { data } = await supabase.auth.getUser();
-      setUser(data.user);
-    }
-    getUser();
-  }, [isVisible]);
 
   return (
     <div className='overflow-x-hidden'>
@@ -57,6 +50,7 @@ const Navigate = () => {
                 <BtnNav linkTo='/' onClick={() => {
                   signOutAction();
                   handleClick();
+                  forceLogout()
                 }}>Sign Out</BtnNav>
               </>
             }

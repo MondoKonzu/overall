@@ -8,12 +8,14 @@ type AuthContextType = {
     user: User | null,
     loading: boolean,
     refresh: () => void
+    forceLogout: () => void
 }
 
 const AuthContext = createContext<AuthContextType>({
     loading: false,
     user: null,
-    refresh: () => {console.log("no context")}
+    refresh: () => {console.log("no context")},
+    forceLogout: () => {console.log("no context")}
 });
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
@@ -37,8 +39,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUpdate(!update);
   }
 
+  /**
+   * Should not be used, since it just turn user to null
+   * and then fetches
+   */
+  function forceLogout(){
+    setUser(null)
+    setTimeout(refresh,1000)
+  }
+
   return (
-    <AuthContext.Provider value={{ user, loading, refresh }}>
+    <AuthContext.Provider value={{ user, loading, refresh, forceLogout }}>
       {children}
     </AuthContext.Provider>
   );

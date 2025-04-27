@@ -2,15 +2,24 @@ import { cn } from '@/lib/utils';
 import { createClient } from '@/utils/supabase/client';
 import { User } from '@supabase/supabase-js'
 import Image from 'next/image';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useGlitch } from 'react-powerglitch';
 
-const UserCard = ({className} : {className?: string}) => {
-    const [user, setUser] = useState<User | null>(null);
+const UserCard = ({className, logUser} : {className?: string, logUser?: User}) => {
+    const [user, setUser] = useState<User | null>(logUser ? logUser : null);
     const glitchImg = useGlitch();
 
-    const supa = createClient();
-    supa.auth.getUser().then().then(ans => setUser(ans.data.user));
+    if(logUser === undefined){
+        useEffect(() => {
+            const userData = async () => {
+                const supa = createClient();
+                const {data, error} = await supa.auth.getUser()
+                if(error) return null;
+                setUser(data.user);
+            }
+            userData()
+        }, [])
+    }
 
     if (user == null) {
         return "not found"

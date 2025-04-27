@@ -11,16 +11,16 @@ import { createClient } from '@/utils/supabase/client'
 import UserCard from './user-card'
 
 
+
 const Navigate = () => {
   const [user, setUser] = useState<User | null>(null);
   const [isVisible, setIsVisible] = useState(false)
   const handleClick = () => {
     setIsVisible(!isVisible)
   }
-
   useEffect(() => {
+    const supabase = createClient();
     const getUser = async () => {
-      const supabase = createClient();
       const { data } = await supabase.auth.getUser();
       setUser(data.user);
     }
@@ -42,7 +42,7 @@ const Navigate = () => {
             {user == null ?
               <div className='row-span-5' />
               :
-              <UserCard className='row-span-3 mt-5 px-4 w-10/12 mx-auto text-left' />
+              <UserCard logUser={user} className='row-span-3 mt-5 px-4 w-10/12 mx-auto text-left' />
             }
             <ModeToggle />
             <BtnNav linkTo='/' onClick={handleClick}>Home</BtnNav>

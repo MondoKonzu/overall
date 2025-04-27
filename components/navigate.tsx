@@ -1,13 +1,10 @@
 "use client"
 
-import React, { useEffect, useState } from 'react'
-import { Button } from './ui/button'
+import React, { useState } from 'react'
 import Image from 'next/image'
 import { ModeToggle } from './ui/mode-toggle'
 import Link from 'next/link'
 import { signOutAction } from '@/lib/actions'
-import { User } from '@supabase/supabase-js'
-import { createClient } from '@/utils/supabase/client'
 import UserCard from './user-card'
 import { useAuth } from '@/app/AuthContext'
 

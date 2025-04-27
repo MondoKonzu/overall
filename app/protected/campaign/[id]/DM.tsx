@@ -17,7 +17,7 @@ export const DM = async ({ campID }: { campID: string }) => {
     return (
         <div className="bg-[url(/wallpaper.png)] bg-cover">
             <CampaignProvider campID={campID}>
-            <DesktopSim className="grid grid-cols-12 gap-8 p-8">
+            <DesktopSim>
                 <App appInfo={{
                     icon: "/spugna.png",
                     appName: "Party", status: "close", id: "1"

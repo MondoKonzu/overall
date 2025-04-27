@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from '@/lib/utils';
 import Image from 'next/image';
 import React, { useContext, useState, createContext } from 'react';
 
@@ -137,7 +138,7 @@ const DesktopSim = ({ className, children }: { className?: string; children: Rea
     <DesktopContext.Provider value={contextValue}>
       <div>
         <div className={"min-w-[100vw] min-h-[100vh]"}>
-          <div className={className}>
+          <div className={cn("grid grid-cols-6 md:grid-cols-12 gap-8 p-8" ,className)}>
             {children}
           </div>
           <div 

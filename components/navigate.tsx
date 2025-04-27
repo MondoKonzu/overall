@@ -1,31 +1,21 @@
 "use client"
 
-import React, { useEffect, useState } from 'react'
-import { Button } from './ui/button'
+import React, { useState } from 'react'
 import Image from 'next/image'
 import { ModeToggle } from './ui/mode-toggle'
 import Link from 'next/link'
 import { signOutAction } from '@/lib/actions'
-import { User } from '@supabase/supabase-js'
-import { createClient } from '@/utils/supabase/client'
 import UserCard from './user-card'
+import { useAuth } from '@/app/AuthContext'
+
 
 
 const Navigate = () => {
-  const [user, setUser] = useState<User | null>(null);
   const [isVisible, setIsVisible] = useState(false)
+  const { user, forceLogout } = useAuth()
   const handleClick = () => {
     setIsVisible(!isVisible)
   }
-
-  useEffect(() => {
-    const getUser = async () => {
-      const supabase = createClient();
-      const { data } = await supabase.auth.getUser();
-      setUser(data.user);
-    }
-    getUser();
-  }, [isVisible]);
 
   return (
     <div className='overflow-x-hidden'>
@@ -42,7 +32,7 @@ const Navigate = () => {
             {user == null ?
               <div className='row-span-5' />
               :
-              <UserCard className='row-span-3 mt-5 px-4 w-10/12 mx-auto text-left' />
+              <UserCard logUser={user} className='row-span-3 mt-5 px-4 w-10/12 mx-auto text-left' />
             }
             <ModeToggle />
             <BtnNav linkTo='/' onClick={handleClick}>Home</BtnNav>
@@ -57,6 +47,7 @@ const Navigate = () => {
                 <BtnNav linkTo='/' onClick={() => {
                   signOutAction();
                   handleClick();
+                  forceLogout()
                 }}>Sign Out</BtnNav>
               </>
             }

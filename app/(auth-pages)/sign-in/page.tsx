@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
+import RefreshUserBtn from "../RefreshUserBtn";
 
 
 export default async function Login() {
@@ -38,9 +39,9 @@ export default async function Login() {
           placeholder="Your password"
           required
         />
-        <Button formAction={signInAction}>
+        <RefreshUserBtn formAction={signInAction}>
           Sign in
-        </Button>
+        </RefreshUserBtn>
       </div>
     </form>
   );

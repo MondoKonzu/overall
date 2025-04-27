@@ -3,6 +3,7 @@ import { Geist } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider"
 import Navigate from "@/components/navigate";
+import { AuthProvider } from "./AuthContext";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -33,12 +34,14 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <main>
+          <AuthProvider>
+            <main>
               <Navigate />
               <div className="w-full">
                 {children}
               </div>
-          </main>
+            </main>
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>

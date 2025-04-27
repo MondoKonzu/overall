@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
+import RefreshUserBtn from "../RefreshUserBtn";
 
 export default async function Signup() {
   const supa = await createClient();
@@ -32,9 +33,9 @@ export default async function Signup() {
             minLength={6}
             required
           />
-          <Button formAction={signUpAction}>
+          <RefreshUserBtn formAction={signUpAction}>
             Sign up
-          </Button>
+          </RefreshUserBtn>
         </div>
       </form>
   );

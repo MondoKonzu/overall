@@ -8,7 +8,6 @@ import CampaingsTable from "@/components/camp-table";
 import ErrorComponent from "@/components/error-comp";
 import Tabs from "@/components/tabs";
 import { User } from "@supabase/supabase-js";
-import UserCard from "@/components/user-card";
 
 export default async function ProtectedPage() {
   const user = await fetchThisUser();
@@ -16,15 +15,30 @@ export default async function ProtectedPage() {
   if (!user) {
     return redirect("/sign-in");
   }
-
-
+  
+  let classTirgger = "cut-edge-br pe-5"
+  let trigActive = "bg-pink-600"
+  let tabsClass = "cut-edge-tl bg-gradient-to-b from-sky-400/20 to-transparent p-5 border-none"
   return (
       <div className="lg:px-16">
-        <Tabs className="mt-10">
+        <Tabs className="mt-10 border-none">
           {[
-            { trigger: "Le tue campagne", body: <CampaignDmInfo />},
-            { trigger: "Le campagne dove giochi", body: <CampUserPlayer /> ,isActive: true},
-            { trigger: "Entra in nuove campagne", body: <CampsJoin user={user} />},
+            { trigger: "Le tue campagne",
+               body: <CampaignDmInfo />,
+                triggerClass: classTirgger,
+                 trigActiveClass: trigActive,
+                className: tabsClass},
+            { trigger: "Le campagne dove giochi",
+               body: <CampUserPlayer /> ,
+               isActive: true,
+                triggerClass: classTirgger,
+                 trigActiveClass: trigActive,
+                className: tabsClass},
+            { trigger: "Entra in nuove campagne",
+               body: <CampsJoin user={user} />,
+                triggerClass: classTirgger,
+                 trigActiveClass: trigActive,
+                className: tabsClass},
           ]}
         </Tabs>
       </div>

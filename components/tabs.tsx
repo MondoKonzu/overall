@@ -10,6 +10,8 @@ export type Tab = {
     body: React.ReactNode;
     className?: string;
     isActive?: boolean;
+    triggerClass?: string
+    trigActiveClass?: string
 }
 
 const Tabs = ({ children, className }: { children: Tab[], className?: string }) => {
@@ -29,8 +31,11 @@ const Tabs = ({ children, className }: { children: Tab[], className?: string }) 
             <div className='flex gap-2 p-1'>
                 {children.map((trig, index) =>
                     <div
-                        className={`rounded py-1 px-1.5 cursor-pointer 
-                    ${activeTab == index && "dark:bg-slate-700 bg-gray-200"}`}
+                        className={cn(
+                            `rounded py-1 px-1.5 cursor-pointer 
+                    ${activeTab == index && cn("bg-slate-700", trig.trigActiveClass)}`,
+                        trig.triggerClass
+                        )}
                         data-tab={index}
                         key={index}
                         onClick={(e) => { tabChange(e.currentTarget) }}

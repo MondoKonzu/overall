@@ -1,19 +1,21 @@
+"use client"
 import { signInAction } from "@/lib/actions";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
-import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
-import RefreshUserBtn from "../RefreshUserBtn";
+import { useAuth } from "@/app/AuthContext";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import "../load.css"
 
-
-export default async function Login() {
-  const supa = await createClient();
-  let res = await supa.auth.getUser();
-  res.data.user != null && redirect("/")
-  return (
-    <form className="flex-1 flex flex-col min-w-64 max-w-[32rem] mt-10 mx-auto">
+export default function Login() {
+  const {user ,refresh} = useAuth();
+  const [loading, setLoading] = useState(false);
+  if(user != null) redirect("/");
+    return (
+  <div className={`min-w-64 max-w-[32rem] mt-10 mx-auto before:rounded-md ${loading && "load"}`}>
+        <form className={`bg-background flex-1 flex flex-col min-w-full p-4 rounded-md`}>
       <h1 className="text-2xl font-medium">Sign in</h1>
       <p className="text-sm text-foreground">
         Don't have an account?{" "}
@@ -39,10 +41,18 @@ export default async function Login() {
           placeholder="Your password"
           required
         />
-        <RefreshUserBtn formAction={signInAction}>
+        <Button formAction={(e) => {
+          signInAction(e)
+          refresh()
+        }}
+        onClick={() => {
+          setLoading(true)
+        }
+        }>
           Sign in
-        </RefreshUserBtn>
+        </Button>
       </div>
     </form>
+  </div>
   );
 }

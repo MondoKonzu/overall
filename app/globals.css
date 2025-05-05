@@ -113,3 +113,25 @@
   }
 
 }
+
+@property --angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes spin {
+  from{
+      --angle: 0deg;
+  }
+  to{
+      --angle: 360deg;
+  }
+}
+
+.bg-spin{
+  --color-1: rgb(0, 188, 255, 0.2);
+  --color-2: rgb(0, 188, 255, 0.1);
+  background-image: conic-gradient( from var(--angle) at -10% -10%,var(--color-1), var(--color-2) 30%, var(--color-1));
+  animation: spin 25s infinite linear;
+}

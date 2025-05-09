@@ -43,7 +43,7 @@ const Tabs = ({ children, className }: { children: Tab[], className?: string }) 
                 {children.filter((trig, index) => index == activeTab)
                     .map((trig, index) =>
                         <div
-                            className={cn('rounded-lg border p-2', trig.className)}
+                            className={cn('rounded-lg border p-0', trig.className)}
                             data-tab={index}
                             key={index}
                         >

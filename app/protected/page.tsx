@@ -8,7 +8,6 @@ import CampaingsTable from "@/components/camp-table";
 import ErrorComponent from "@/components/error-comp";
 import Tabs from "@/components/tabs";
 import { User } from "@supabase/supabase-js";
-import "./tabs.css"
 
 export default async function ProtectedPage() {
   const user = await fetchThisUser();

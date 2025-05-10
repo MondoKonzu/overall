@@ -20,7 +20,7 @@
     transform: translate(-50%, -50%);
     z-index: -20;
     background-image: conic-gradient(from var(--angle),
-     transparent 20%,green);
+     transparent 20%,oklch(53.2% 0.157 131.589));
     animation: spin 1s linear infinite;
 }
 
@@ -31,4 +31,14 @@
     to{
         --angle: 360deg
     }
+}
+
+input{
+    @apply px-2 py-1.5
+}
+
+input:focus {
+  outline: none;
+  box-shadow: none;
+  border-color: inherit; /* opzionale, se vuoi mantenere il bordo come era */
 }

@@ -14,7 +14,7 @@ export default function Signup() {
   const [loading, setLoading] = useState(false);  
   return (
     <div className={`min-w-64 max-w-[32rem] mt-10 mx-auto before:rounded-md ${loading && "load"}`}>
-    <form className={`bg-background flex-1 flex flex-col min-w-full p-4 rounded-md`}>
+    <form className={`bg-background flex-1 flex flex-col min-w-full p-4 rounded-md font-mono`}>
       <h1 className="text-2xl font-medium">Sign up</h1>
       <p className="text-sm text text-foreground">
         Already have an account?{" "}
@@ -24,18 +24,18 @@ export default function Signup() {
       </p>
       <div className="flex flex-col gap-2 [&>input]:mb-3 mt-8">
         <Label htmlFor="username">Username</Label>
-        <Input name="username" placeholder="player123" />
+        <input name="username" placeholder="player123" />
         <Label htmlFor="email">Email</Label>
-        <Input name="email" placeholder="you@example.com" required />
+        <input name="email" placeholder="you@example.com" required />
         <Label htmlFor="password">Password</Label>
-        <Input
+        <input
           type="password"
           name="password"
           placeholder="Your password"
           minLength={6}
           required
         />
-        <Button formAction={(e) => {
+        <Button variant={"cy"} formAction={(e) => {
           signUpAction(e)
           refresh();
         }}

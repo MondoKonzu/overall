@@ -102,6 +102,11 @@
     clip-path: polygon(1.8rem 0%,100% 0%, 100% 100%, 100% 100%, 0% 100%, 0% 1.6rem) !important;
   }
 
+  .cut-edge-tr{
+    @apply rounded-none;
+    clip-path: polygon(0 0%,calc(100% - 1.5rem) 0%, 100% calc(100% - 0.9rem), 100% 100%, 0% 100%, 0% 100%) !important;
+  }
+
   .cut-edge-br{
     @apply rounded-none;
     clip-path: polygon(0% 0%,100% 0%, 100% calc(100% - 1rem), calc(100% - 1rem) 100%, 0% 100%, 0% 1.6rem) !important;
@@ -134,4 +139,26 @@
   --color-2: rgb(0, 188, 255, 0.1);
   background-image: conic-gradient( from var(--angle) at -10% -10%,var(--color-1), var(--color-2) 30%, var(--color-1));
   animation: spin 25s infinite linear;
+}
+
+.cytn{
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+}
+
+.cytn::after{
+  content: "";
+  position: absolute;
+  top: 0%;
+  right: calc(0.3rem - 100%);
+  min-width: 100%;
+  min-height: 100%;
+  z-index: -1;
+  transition: 400ms;
+}
+
+.cytn:hover::after{
+  right: 0;
+  transition: 400ms;
 }

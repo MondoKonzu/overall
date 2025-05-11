@@ -19,7 +19,7 @@ export default function Login() {
           signInAction(e)
           refresh()
         }} className={`bg-background flex-1 flex flex-col min-w-full p-4 rounded-md`}>
-      <h1 className="text-2xl font-medium">Sign in</h1>
+      <h1 className="text-2xl font-medium text-yellow-400">Sign in</h1>
       <p className="text-sm text-foreground">
         Don't have an account?{" "}
         <Link className="text-foreground font-medium underline" href="/sign-up">
@@ -44,7 +44,7 @@ export default function Login() {
           placeholder="Your password"
           required
         />
-        <Button className="font-bold text-lg" variant={"cy"}
+        <Button className="font-bold mt-7 text-lg" variant={"cy"}
         onClick={() => {
           setLoading(true)
           setTimeout(() => {

@@ -14,9 +14,12 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   if(user != null) redirect("/");
     return (
-  <div className={`min-w-64 max-w-[32rem] mt-10 mx-auto before:rounded-md ${loading && "load"}`}>
-        <form className={`bg-background flex-1 flex flex-col min-w-full p-4 rounded-md`}>
-      <h1 className="text-2xl font-medium">Sign in</h1>
+  <div className={`min-w-64 max-w-[32rem] mt-10 mx-auto before:rounded-md font-mono ${loading && "load"}`}>
+        <form action={(e) => {
+          signInAction(e)
+          refresh()
+        }} className={`${loading ? "bg-black": "bg-black/70"} duration-200 backdrop-blur-md flex-1 flex flex-col min-w-full p-4 rounded-md`}>
+      <h1 className="text-2xl font-medium text-yellow-400">Sign in</h1>
       <p className="text-sm text-foreground">
         Don't have an account?{" "}
         <Link className="text-foreground font-medium underline" href="/sign-up">
@@ -25,7 +28,7 @@ export default function Login() {
       </p>
       <div className="flex flex-col gap-2 [&>input]:mb-3 mt-8">
         <Label htmlFor="email">Email</Label>
-        <Input name="email" placeholder="you@example.com" required />
+        <input name="email" placeholder="you@example.com" required />
         <div className="flex justify-between items-center">
           <Label htmlFor="password">Password</Label>
           <Link
@@ -35,18 +38,20 @@ export default function Login() {
             Forgot Password?
           </Link>
         </div>
-        <Input
+        <input
           type="password"
           name="password"
           placeholder="Your password"
           required
         />
-        <Button formAction={(e) => {
-          signInAction(e)
-          refresh()
-        }}
+        <Button className="font-bold mt-7 text-lg" variant={"cy"}
         onClick={() => {
           setLoading(true)
+          setTimeout(() => {
+            if(user == null){
+              setLoading(false)
+            }
+          }, 10000)
         }
         }>
           Sign in

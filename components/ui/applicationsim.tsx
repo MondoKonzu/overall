@@ -159,7 +159,7 @@ const AppSim = (
     ref={draggableRef}
     onLoad={() => {desktop.activeApp(appInfo.id)}}
     style={{ ...style, zIndex: desktop.getZindex(appInfo.id) }}
-    className={` ${cn("rounded border bg-black", className)} ${isMax ? "" : "cut-edge-app"} ${desktop.getAppStatus(appInfo.id) !== "open" ? "hidden" : ""}`}
+    className={` ${cn("rounded bg-black", className)} ${isMax ? "" : "cut-edge-app"} ${desktop.getAppStatus(appInfo.id) !== "open" ? "hidden" : ""}`}
     onMouseDown={() => { desktop.activeApp(appInfo.id)}}
 >
   {/* resizer */}

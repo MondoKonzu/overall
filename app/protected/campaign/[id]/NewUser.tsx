@@ -17,8 +17,8 @@ export const NewUser = ({ camp, user,pendings }: { camp: Campaign, user: User , 
         alreadyInList = pendings.findIndex(pend => pend.player.userID == user.id)
     }
     return (
-        <div ref={genGlitch.ref} className="w-[100vw] pt-20 h-[100vh] bg-[url(/error-wallpaper.png)] bg-cover overflow-hidden"> 
-            <div className="w-[75vw] cut-edge-app backdrop-blur-sm bg-black/50 mx-auto">
+        <div className="w-[100vw] pt-20 h-[100vh] bg-[url(/error-wallpaper.png)] bg-cover overflow-hidden"> 
+            <div ref={genGlitch.ref} className="w-[75vw] cut-edge-app backdrop-blur-sm bg-black/50 mx-auto">
             {
                 alreadyInList == -1 ?
                         <div className="p-12">

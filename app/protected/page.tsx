@@ -16,12 +16,13 @@ export default async function ProtectedPage() {
     return redirect("/sign-in");
   }
   
-  let classTirgger = "cut-edge-br pe-5"
-  let trigActive = "bg-pink-600"
-  let tabsClass = "cut-edge-tl bg-gradient-to-b from-sky-400/20 to-transparent p-5 border-none"
+  let classTirgger = "cut-edge-br pe-5 hover:bg-pink-400 duration-200"
+  let trigActive = "bg-pink-600 hover:bg-pink-800"
+  // bg-gradient-to-b from-sky-400/20 to-transparent
+  let tabsClass = "cut-edge-app bg-spin p-5 border-none"
   return (
       <div className="lg:px-16">
-        <Tabs className="mt-10 border-none">
+        <Tabs className="mt-10  border-none">
           {[
             { trigger: "Le tue campagne",
                body: <CampaignDmInfo />,

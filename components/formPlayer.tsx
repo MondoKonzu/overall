@@ -21,7 +21,7 @@ const FormPlayer = ({campID , className} : {campID : string, className?: string}
                 insertPlayer(fd, true)
                 router.refresh();
             }}
-                className='shrink w-3/12'
+                className='shrink  md:w-3/12'
             >Send Request</Button>
         </form>
     </div>

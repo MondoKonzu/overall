@@ -18,7 +18,7 @@ export default function Login() {
         <form action={(e) => {
           signInAction(e)
           refresh()
-        }} className={`bg-background flex-1 flex flex-col min-w-full p-4 rounded-md`}>
+        }} className={`${loading ? "bg-black": "bg-black/70"} duration-200 backdrop-blur-md flex-1 flex flex-col min-w-full p-4 rounded-md`}>
       <h1 className="text-2xl font-medium text-yellow-400">Sign in</h1>
       <p className="text-sm text-foreground">
         Don't have an account?{" "}

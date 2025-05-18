@@ -20,7 +20,7 @@ export default function Signup() {
         refresh();
     }}
     
-    className={`bg-background flex-1 flex flex-col min-w-full p-4 rounded-md font-mono`}>
+    className={`${loading ? "bg-black" : "bg-black/70"} duration-200 backdrop-blur-md flex-1 flex flex-col min-w-full p-4 rounded-md font-mono`}>
       <h1 className="text-2xl font-medium text-yellow-400">Sign up</h1>
       <p className="text-sm text text-foreground">
         Already have an account?{" "}
@@ -41,7 +41,7 @@ export default function Signup() {
           minLength={6}
           required
         />
-        <Button className="mt-7" variant={"cy"}
+        <Button className="font-bold mt-7 text-lg" variant={"cy"}
           onClick={() => {setLoading(true)}}
         >
           Sign up

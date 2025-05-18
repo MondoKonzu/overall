@@ -20,7 +20,7 @@
     transform: translate(-50%, -50%);
     z-index: -20;
     background-image: conic-gradient(from var(--angle),
-     transparent 20%,oklch(53.2% 0.157 131.589));
+     transparent 20%,oklch(85.2% 0.199 91.936));
     animation: spin 1s linear infinite;
 }
 
@@ -34,7 +34,7 @@
 }
 
 input{
-    @apply px-2 py-1.5 cut-edge-tr;
+    @apply px-2 py-1.5 cut-edge-tr bg-slate-600/50;
 }
 
 input:focus {

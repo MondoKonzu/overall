@@ -12,14 +12,14 @@ import { useAuth } from '@/app/AuthContext'
 
 const Navigate = () => {
   const [isVisible, setIsVisible] = useState(false)
-  const { user, forceLogout } = useAuth()
+  const { user, refresh } = useAuth()
   const handleClick = () => {
     setIsVisible(!isVisible)
   }
 
   return (
     <div className='overflow-x-hidden'>
-      <button onClick={handleClick} className={`fixed z-50 px-2 py-1.5`}>
+      <button onClick={handleClick} className={`fixed right-0 z-50 px-2 py-1.5`}>
         <Image alt='Menù' src="/menu.png" width={35} height={35} className='dark:invert' />
       </button>
       <div className={`fixed ${isVisible ? `right-0` : `right-full`} z-40 min-h-[100vh] min-w-[100vw] 
@@ -44,10 +44,10 @@ const Navigate = () => {
               :
               <>
                 <BtnNav linkTo='/protected' onClick={handleClick}>My Profile</BtnNav>
-                <BtnNav linkTo='/' onClick={() => {
-                  signOutAction();
+                <BtnNav linkTo='/' onClick={async () => {
+                  await signOutAction();
+                  refresh()
                   handleClick();
-                  forceLogout()
                 }}>Sign Out</BtnNav>
               </>
             }

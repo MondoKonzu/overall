@@ -22,7 +22,7 @@ export default async function ProtectedPage() {
   let tabsClass = "cut-edge-app bg-spin p-5 border-none"
   return (
       <div className="lg:px-16">
-        <Tabs className="mt-10  border-none">
+        <Tabs className="mt-10 dark:bg-background  border-none">
           {[
             { trigger: "Le tue campagne",
                body: <CampaignDmInfo />,

@@ -7,6 +7,7 @@ import Link from 'next/link'
 import { signOutAction } from '@/lib/actions'
 import UserCard from './user-card'
 import { useAuth } from '@/app/AuthContext'
+import Playground from './Minigame'
 
 
 
@@ -72,49 +73,4 @@ const BtnNav = ({ children, linkTo, onClick }: { children: React.ReactNode, link
     </Link>
   )
 }
-
-const POSS = ["BD", "E9", "1C", "7A", "55", "FF"]
-
-const Playground = () => {
-  const [tot, setTot] = useState<string[][]>([])
-  const [coords, setCoords] = useState<string[]>([]);
-  useEffect(() => {
-    const las = () => Array.from({ length: 6 }, () => POSS[Math.floor(Math.random() * 5)]);
-    const toti  = Array.from({length: 6}, () => las())
-    const concat : string[]= []
-    toti.forEach((row, index) => row.map(
-      (item, sindex) => {
-        concat.push(`r${index},c${sindex}`)
-      }))
-      console.log(concat)
-      setCoords(concat)
-      setTot(toti)
-  }, [])
-  return (
-    <div className='grid place-content-center min-h-[100vh]'>
-          <div className='cursor-pointer w-[30vw] h-[30vw] grid grid-cols-6'>
-      {tot.map((row, index) => row.map(
-        (item, sindex) => {
-          return  <MySquare id={`r${index},c${sindex}`} key={`${index}${sindex}`}>{item}</MySquare> 
-        })
-        )}
-
-    </div>
-    </div>
-  )
-}
-
-const MySquare = ({children, id} : {children: React.ReactNode, id: any}) => {
-  const [act, setAct] = useState<boolean>(false);
-  return (
-    <span id={id} className={`mx-auto grid place-content-center text-center h-[5vw] w-[5vw] ${act ? "bg-green-800 border border-green-400" : "bg-black" }`}
-      onClick={() => {
-        setAct(true);
-      }}
-    >
-      <span>{children}</span>
-    </span>
-  )
-}
-
 export default Navigate

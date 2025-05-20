@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import { ModeToggle } from './ui/mode-toggle'
 import Link from 'next/link'
@@ -25,8 +25,8 @@ const Navigate = () => {
       <div className={`fixed ${isVisible ? `right-0` : `right-full`} z-40 min-h-[100vh] min-w-[100vw] 
         duration-300 bg-red-500/90 backdrop-blur-sm`}>
         <div className='grid md:grid-cols-3'>
-          <div className='col-span-2 p-16  hidden md:block' onClick={handleClick}>
-            placeholder
+          <div className='col-span-2 hidden md:block'>
+            <Playground />
           </div>
           <div className='bg-red-950/15 min-h-screen top-0 text-center grid '>
             {user == null ?
@@ -70,6 +70,19 @@ const BtnNav = ({ children, linkTo, onClick }: { children: React.ReactNode, link
         </span>
       </button>
     </Link>
+  )
+}
+
+const Playground = () => {
+  const las = () => Array.from({ length: 10 }, () => Math.floor(Math.random() * 100));
+  const tot  = Array.from({length: 10}, () => las())
+  console.log(tot)
+  return (
+    <div className='bg-black/20 min-h-11/12 min-w-11/12 place-content-center grid grid-cols-10'>
+      {tot.map((row, index) => row.map(
+        (item, sindex) => <span key={`${index}${sindex}`}>{item}</span>
+      ))}
+    </div>
   )
 }
 

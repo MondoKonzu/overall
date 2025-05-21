@@ -19,6 +19,7 @@ const Playground = () => {
   const [lastMove, setLastMove] = useState<string>("r0,c0");
   const [toWin, setToWin] = useState<{move: string, coord:string}[]>([])
   const [running, setRunning] = useState<boolean>(true)
+  const [width, setWidth] = useState(100);
   const canBeUsed = (coord: string) => {
     // when true the user can move on the same row
     //else he can move in the same column
@@ -101,6 +102,19 @@ const Playground = () => {
     console.log(toti)
     challenge(toti)
     setTot(toti)
+    
+    const duration = 30000; // 30 seconds in milliseconds
+    const startTime = Date.now();
+    
+    const interval = setInterval(() => {
+      const elapsed = Date.now() - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      setWidth(100 * (1 - progress));
+      
+      if (progress >= 1) clearInterval(interval);
+    }, 16); // ~60fps update rate
+
+    return () => clearInterval(interval);
   }, [running])
   /**at every move check the status */
   useEffect(() => {
@@ -125,7 +139,7 @@ const Playground = () => {
 
       <div className='grid gap-2 place-content-center min-h-[100vh]'>
         <div>{toWin.map(item => <span className="ms-1" key={item.coord}>{item.move}</span>)}</div>
-        <div className={`h-2 w-full rounded-full bg-teal-600`}>
+        <div style={{width: `${width}%`}} className={`h-2 rounded-full bg-teal-600`}>
       </div>
         <div className={`cursor-pointer w-[30vw] h-[30vw] grid grid-cols-6 bg-black`}>
           {

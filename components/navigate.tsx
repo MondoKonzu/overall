@@ -7,6 +7,9 @@ import Link from 'next/link'
 import { signOutAction } from '@/lib/actions'
 import UserCard from './user-card'
 import { useAuth } from '@/app/AuthContext'
+import Playground from './Minigame'
+import AnimateBg from './ui/Cyberpunkbackground'
+import CyberpunkBackground from './ui/Cyberpunkbackground'
 
 
 
@@ -26,7 +29,9 @@ const Navigate = () => {
         duration-300 bg-red-500/90 backdrop-blur-sm`}>
         <div className='grid md:grid-cols-3'>
           <div className='col-span-2 hidden md:block'>
-            <Playground />
+            <CyberpunkBackground >
+              <Playground />
+            </CyberpunkBackground>
           </div>
           <div className='bg-red-950/15 min-h-screen top-0 text-center grid '>
             {user == null ?
@@ -72,18 +77,4 @@ const BtnNav = ({ children, linkTo, onClick }: { children: React.ReactNode, link
     </Link>
   )
 }
-
-const Playground = () => {
-  const las = () => Array.from({ length: 10 }, () => Math.floor(Math.random() * 100));
-  const tot  = Array.from({length: 10}, () => las())
-  console.log(tot)
-  return (
-    <div className='bg-black/20 min-h-11/12 min-w-11/12 place-content-center grid grid-cols-10'>
-      {tot.map((row, index) => row.map(
-        (item, sindex) => <span key={`${index}${sindex}`}>{item}</span>
-      ))}
-    </div>
-  )
-}
-
 export default Navigate

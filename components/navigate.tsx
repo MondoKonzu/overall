@@ -8,6 +8,8 @@ import { signOutAction } from '@/lib/actions'
 import UserCard from './user-card'
 import { useAuth } from '@/app/AuthContext'
 import Playground from './Minigame'
+import AnimateBg from './ui/Cyberpunkbackground'
+import CyberpunkBackground from './ui/Cyberpunkbackground'
 
 
 
@@ -27,7 +29,9 @@ const Navigate = () => {
         duration-300 bg-red-500/90 backdrop-blur-sm`}>
         <div className='grid md:grid-cols-3'>
           <div className='col-span-2 hidden md:block'>
-            <Playground />
+            <CyberpunkBackground >
+              <Playground />
+            </CyberpunkBackground>
           </div>
           <div className='bg-red-950/15 min-h-screen top-0 text-center grid '>
             {user == null ?

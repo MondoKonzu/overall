@@ -157,17 +157,20 @@ const Playground = () => {
       }
     }>
 
-      <div className='grid gap-2 place-content-center min-h-[100vh]'>
-        <div>{toWin.map(item => <span className="ms-1" key={item.coord}>{item.move}</span>)}</div>
+      <div className='grid gap-2 place-content-center min-h-[100vh] select-none -translate-y-12'>
+        <div className="text-2xl font-bold w-fit bg-cyan-700/40 rounded px-2">
+          {toWin.map(item => <span className="p-0.5" key={item.coord}>{item.move}</span>)}
+        </div>
         <div style={{ width: `${width}%` }} className={`h-2 rounded-full bg-teal-600`}>
         </div>
         <div
-          onClick={() => {
+          onClick={(e) => {
             if (status == "waiting" && !running) {
               setRunning(true)
             }
+            e.stopPropagation()
           }}
-          className={`cursor-pointer w-[30vw] h-[30vw] grid grid-cols-6 bg-black`}>
+          className={`cursor-pointer w-[30vw] h-[30vw] ${status == "waiting" && "grid grid-cols-6" } bg-black`}>
           {
             status == "waiting" ?
               tot.map((row, index) => row.map(
@@ -216,30 +219,30 @@ const Result = ({ status, refresh }: { status: "noTime" | "won" | "error" | "wai
   switch (status) {
     case "error":
       return (
-        <>
+        <div className="w-full min-h-[30vw] grid place-content-center">
           <h2 className="text-3xl">Hai commesso un errore</h2>
           <TryAgain />
-        </>
+        </div>
       )
     case "noTime":
       return (
-        <>
+        <div className="w-full min-h-[30vw] grid place-content-center">
           <h2 className="text-3xl">Hai finito il tempo</h2>
           <TryAgain />
-        </>
+        </div>
       )
     case "won":
       return(
-              <>
+        <div className="w-full min-h-[30vw] grid place-content-center">
         <h2 className="text-3xl">Hai Vinto</h2>
         <TryAgain />
-      </>
+      </div>
       )
     default:
-      <>
+      <div className="w-full min-h-[30vw] grid place-content-center">
         <h2 className="text-3xl">Qualcosa è andato storto</h2>
         <TryAgain />
-      </>
+      </div>
   }
 }
 

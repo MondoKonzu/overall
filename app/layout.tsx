@@ -37,9 +37,7 @@ export default function RootLayout({
           <AuthProvider>
             <main>
               <Navigate />
-              <div className="w-full">
                 {children}
-              </div>
             </main>
           </AuthProvider>
         </ThemeProvider>

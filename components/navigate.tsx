@@ -18,6 +18,7 @@ const Navigate = () => {
   const { user, refresh } = useAuth()
   const handleClick = () => {
     setIsVisible(!isVisible)
+    console.log("toggle")
   }
 
   return (
@@ -28,7 +29,7 @@ const Navigate = () => {
       <div className={`fixed ${isVisible ? `right-0` : `right-full`} z-40 min-h-[100vh] min-w-[100vw] 
         duration-300 bg-red-500/90 backdrop-blur-sm`}>
         <div className='grid md:grid-cols-3'>
-          <div className='col-span-2 hidden md:block'>
+          <div onClick={handleClick} className='col-span-2 hidden md:block'>
             <CyberpunkBackground >
               <Playground />
             </CyberpunkBackground>

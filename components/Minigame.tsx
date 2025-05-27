@@ -21,6 +21,23 @@ const Playground = () => {
   const [running, setRunning] = useState<boolean>(false)
   const [width, setWidth] = useState(100);
   const [status, setStatus] = useState<"noTime" | "won" | "error" | "waiting">("waiting")
+  const [screenSize, setScreenSize] = useState<number>()
+  useEffect(() => {
+    const setSize = () => {
+      let x = Math.floor((window.innerWidth / 3) * 2)
+      let y = Math.floor(window.innerHeight)
+      let minus = 200
+      let nVal = x >= y ? (x-minus) : (y-minus)
+      console.log("x: "+ x + "y: " +y + "\nNval: " + nVal)
+      setScreenSize(nVal)
+    }
+    setSize()
+    window.addEventListener("resize", setSize)
+
+    return () => {
+      window.removeEventListener("resize", setSize)
+    }
+  }, [])
   const canBeUsed = (coord: string) => {
     // when true the user can move on the same row
     //else he can move in the same column
@@ -114,7 +131,7 @@ const Playground = () => {
 
   useEffect(() => {
     if (running) {
-      const duration = 30000; // 30 seconds in milliseconds
+      const duration = 15000; // 15 seconds in milliseconds
       const startTime = Date.now();
 
       const interval = setInterval(() => {
@@ -157,7 +174,7 @@ const Playground = () => {
       }
     }>
 
-      <div className='grid gap-2 place-content-center min-h-[100vh] select-none -translate-y-12'>
+      <div style={{width: screenSize + "px"}} className='min-h-[100vh] select-none grid grid-cols-1 gap-3 py-3 mx-auto place-content-center'>
         <div className="text-2xl font-bold w-fit bg-cyan-700/40 rounded px-2">
           {toWin.map(item => <span className="p-0.5" key={item.coord}>{item.move}</span>)}
         </div>
@@ -170,12 +187,17 @@ const Playground = () => {
             }
             e.stopPropagation()
           }}
-          className={`cursor-pointer w-[30vw] h-[30vw] ${status == "waiting" && "grid grid-cols-6" } bg-black`}>
+          className={`cursor-pointer ${status == "waiting" && "grid grid-cols-6" } bg-black`}
+            style={{
+              width: screenSize + "px",
+              height: screenSize + "px"
+            }}
+          >
           {
             status == "waiting" ?
               tot.map((row, index) => row.map(
                 (item, sindex) => {
-                  return <MySquare coord={`r${index},c${sindex}`} key={`${index}${sindex}`}>{item}</MySquare>
+                  return <MySquare size={screenSize} coord={`r${index},c${sindex}`} key={`${index}${sindex}`}>{item}</MySquare>
                 })
               )
               :
@@ -194,13 +216,17 @@ function useGame() {
   return useContext(GameContext);
 }
 
-const MySquare = ({ children, coord }: { children: React.ReactNode, coord: any }) => {
+const MySquare = ({ children, coord, size }: { children: React.ReactNode, coord: any, size: number | undefined }) => {
   const { canBeUsed, addMove } = useGame()
   const [isAct, setIsAct] = useState<boolean>(false);
-
+  const sqSize = size !== undefined ? size/6 : 20
   return (
-    <span className={`mx-auto grid place-content-center text-center h-[5vw] w-[5vw] ${isAct && "bg-green-800"} ${canBeUsed(coord) && "bg-slate-800 hover:bg-slate-700"}`}
-      onClick={() => {
+    <span className={`mx-auto duration-300 grid place-content-center text-center ${isAct && "bg-green-600/80"} ${canBeUsed(coord) && "bg-slate-800 hover:bg-slate-700"}`}
+    style={{
+      width: sqSize + "px",
+      height: sqSize + "px"
+    }}  
+    onClick={() => {
         if (canBeUsed(coord)) {
           setIsAct(true);
           addMove(coord)
@@ -214,32 +240,32 @@ const MySquare = ({ children, coord }: { children: React.ReactNode, coord: any }
 
 const Result = ({ status, refresh }: { status: "noTime" | "won" | "error" | "waiting", refresh: () => void }) => {
   const TryAgain = () => {
-    return <Button onClick={refresh}>Riprova</Button>
+    return <Button className="max-w-32 mx-auto" onClick={refresh}>Riprova</Button>
   }
   switch (status) {
     case "error":
       return (
-        <div className="w-full min-h-[30vw] grid place-content-center">
-          <h2 className="text-3xl">Hai commesso un errore</h2>
+        <div className="w-full min-h-[30vw] grid gap-4 px-16 text-center -translate-y-10 place-content-center">
+                      <h2 className="text-3xl">Hai commesso un errore</h2>
           <TryAgain />
         </div>
       )
     case "noTime":
       return (
-        <div className="w-full min-h-[30vw] grid place-content-center">
+        <div className="w-full min-h-[30vw] grid gap-4 px-16 text-center -translate-y-10 place-content-center">
           <h2 className="text-3xl">Hai finito il tempo</h2>
           <TryAgain />
         </div>
       )
     case "won":
       return(
-        <div className="w-full min-h-[30vw] grid place-content-center">
+        <div className="w-full min-h-[30vw] grid gap-4 px-16 text-center -translate-y-10 place-content-center">
         <h2 className="text-3xl">Hai Vinto</h2>
         <TryAgain />
       </div>
       )
     default:
-      <div className="w-full min-h-[30vw] grid place-content-center">
+      <div className="w-full min-h-[30vw] grid gap-4 px-16 text-center -translate-y-10 place-content-center">
         <h2 className="text-3xl">Qualcosa è andato storto</h2>
         <TryAgain />
       </div>

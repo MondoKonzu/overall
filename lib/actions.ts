@@ -45,6 +45,13 @@ export const signInAction = async (formData: FormData) => {
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
   const supabase = await createClient();
+  if(email.length == 0 || password.length == 0){
+    return encodedRedirect(
+      "error",
+      "/sign-in",
+    "No data found"
+  )
+  }
 
   const { error } = await supabase.auth.signInWithPassword({
     email,
@@ -112,6 +119,14 @@ export const resetPasswordAction = async (formData: FormData) => {
       "/reset-password",
       "Passwords do not match",
     );
+  }
+
+  if(password.length < 6){
+    encodedRedirect(
+      "error",
+      "/reset-password",
+      "Password must have at least 6 chars"
+    )
   }
 
   const { error } = await supabase.auth.updateUser({

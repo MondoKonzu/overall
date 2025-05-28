@@ -25,8 +25,8 @@ const Playground = () => {
   useEffect(() => {
     const setSize = () => {
       let x = Math.floor((window.innerWidth / 3) * 2)
-      let y = Math.floor(window.innerHeight)
-      let minus = 200
+      let y = Math.floor(window.innerHeight - 200)
+      let minus = window.innerWidth < 1000 ? 100 :400
       let nVal = x >= y ? (x-minus) : (y-minus)
       console.log("x: "+ x + "y: " +y + "\nNval: " + nVal)
       setScreenSize(nVal)

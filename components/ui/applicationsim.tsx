@@ -11,64 +11,72 @@ import { cn } from "@/lib/utils";
 import { ScrollArea } from "./scroll-area";
 
 export const App = (
-  { appInfo, children, className, set }: 
-  { appInfo: {icon: string,appName: string, status: "open" | "hidden" | "close", id: string},
-    children: React.ReactNode, className?: string, 
-    set?: { width?: string, height?: string, position?: { x: number, y: number } }
-  }) => {
-    //recovering useful vars
-    const desktop = useDesktop();
-    // Use appInfo.status as initial state to keep in sync with context
-    const [status, setStatus] = useState<"open" | "hidden" | "close">(appInfo.status);
+  { appInfo, children, className, set }:
+    {
+      appInfo: { icon: string | React.ReactNode, appName: string, status: "open" | "hidden" | "close", id: string },
+      children: React.ReactNode, className?: string,
+      set?: { width?: string, height?: string, position?: { x: number, y: number } }
+    }) => {
+  //recovering useful vars
+  const desktop = useDesktop();
+  // Use appInfo.status as initial state to keep in sync with context
+  const [status, setStatus] = useState<"open" | "hidden" | "close">(appInfo.status);
 
-    // update the status both for the app and the context
-    const handleAppStatus = (newStatus: "open" | "hidden" | "close") => {
-      if(desktop){
-        desktop.updateAppStatus(appInfo.id, newStatus);
-      }
-      setStatus(newStatus);
+  // update the status both for the app and the context
+  const handleAppStatus = (newStatus: "open" | "hidden" | "close") => {
+    if (desktop) {
+      desktop.updateAppStatus(appInfo.id, newStatus);
     }
-    
-    // adding the app in the context
-    useEffect(() => {
-      if (!desktop) return;
-      desktop.addApp(appInfo.icon,appInfo.appName, appInfo.status, appInfo.id);
-    }, [desktop, appInfo.id, appInfo.appName, appInfo.status]);
+    setStatus(newStatus);
+  }
+
+  // adding the app in the context
+  useEffect(() => {
+    if (!desktop) return;
+    desktop.addApp(appInfo.icon, appInfo.appName, appInfo.status, appInfo.id);
+  }, [desktop, appInfo.id, appInfo.appName, appInfo.status]);
 
 
-    //just to make it easier to use handleAppStatus
-    const openApp = () => handleAppStatus("open")
-    const closeApp = () => handleAppStatus("close")
-    const hideApp = () => handleAppStatus("hidden")
-    return (
-      <div>
+  //just to make it easier to use handleAppStatus
+  const openApp = () => handleAppStatus("open")
+  const closeApp = () => handleAppStatus("close")
+  const hideApp = () => handleAppStatus("hidden")
+  return (
+    <div>
 
-        {/* Icon */}
-        <div onClick={openApp} style={{ cursor: "pointer" }}>
-          <Image className="min-w-12" alt={appInfo.appName} width={"50"} height={"50"} src={appInfo.icon} />
-        </div>
-        
-        {/* Main app */}
-        {(status === "open" || status === "hidden") && (
-          <AppSim 
-            key={appInfo.id} 
-            appInfo={{...appInfo, status}} 
-            className={className}
-            set={set}
-            closeApp={closeApp}
-            hideApp={hideApp}
-          >
-            {children}
-          </AppSim>
-        )}
+      {/* Icon */}
+      <div onClick={openApp} style={{ cursor: "pointer" }}>
+        {
+          typeof appInfo.icon == "string" ?
+            <Image src={appInfo.icon} alt={appInfo.appName} width={40} height={30} />
+            :
+            <>
+              {appInfo.icon}
+            </>
+        }
       </div>
-    );
+
+      {/* Main app */}
+      {(status === "open" || status === "hidden") && (
+        <AppSim
+          key={appInfo.id}
+          appInfo={{ ...appInfo, status }}
+          className={className}
+          set={set}
+          closeApp={closeApp}
+          hideApp={hideApp}
+        >
+          {children}
+        </AppSim>
+      )}
+    </div>
+  );
 };
 
 const AppSim = (
   { appInfo, children, className, set, hideApp, closeApp }:
     {
-      appInfo: { icon: string,appName: string, status: "open" | "hidden" | "close", id: string},
+      appInfo: { icon: string | React.ReactNode, appName: string, status: "open" | "hidden" | "close", id: string },
       children: React.ReactNode, className?: string,
       set?: { width?: string, height?: string, position?: { x: number, y: number } }
       hideApp: () => void,
@@ -76,13 +84,15 @@ const AppSim = (
     }
 ) => {
   const { activator, isDragging, draggableRef, style, setWidth, setHeight, position, setPosition } = useDraggable(
-    {data: {
-      pos: set?.position !== undefined ? set.position : undefined,
-      size: {
-        height: set?.height !== undefined ? set.height : undefined,
-        width: set?.width !== undefined ? set.width : undefined,
+    {
+      data: {
+        pos: set?.position !== undefined ? set.position : undefined,
+        size: {
+          height: set?.height !== undefined ? set.height : undefined,
+          width: set?.width !== undefined ? set.width : undefined,
+        }
       }
-    }}
+    }
   );
   //the whole trash above is just the wrong way to get vars
 
@@ -90,12 +100,12 @@ const AppSim = (
   const [innerHeight, setInnerHeight] = useState<string | number>("100%");
   const body = useRef(null);
 
-  useEffect(()=>{
+  useEffect(() => {
     setTimeout(setInHeight, 1)
   }, [body])
 
-  const [lastInfo, setLastInfo] = useState<{pos : {x: number, y: number}, sizes: {width: string, height: string}}>
-  ({pos : {x: 0, y: 0}, sizes : {width: "", height: ""}});
+  const [lastInfo, setLastInfo] = useState<{ pos: { x: number, y: number }, sizes: { width: string, height: string } }>
+    ({ pos: { x: 0, y: 0 }, sizes: { width: "", height: "" } });
 
   const setInHeight = () => {
     console.log("inner" + innerHeight)
@@ -124,17 +134,17 @@ const AppSim = (
   };
 
   const handleMaxSize = () => {
-    if(draggableRef !== undefined && draggableRef.current !== null){
+    if (draggableRef !== undefined && draggableRef.current !== null) {
       let w = draggableRef.current.getBoundingClientRect().width + "px";
       let h = draggableRef.current.getBoundingClientRect().height + "px";
 
-      setLastInfo({pos: position, sizes: {width: w, height: h}});
-    }else{
-      setLastInfo({pos: position, sizes: {width: "100%", height: "100%"}});
+      setLastInfo({ pos: position, sizes: { width: w, height: h } });
+    } else {
+      setLastInfo({ pos: position, sizes: { width: "100%", height: "100%" } });
     }
-    setPosition({x: 0, y: 0});
+    setPosition({ x: 0, y: 0 });
     setWidth("99.9vw")
-    setHeight((window.innerHeight-1) + "px");    
+    setHeight((window.innerHeight - 1) + "px");
     setTimeout(setInHeight, 1)
   }
 
@@ -145,51 +155,51 @@ const AppSim = (
     setTimeout(setInHeight, 1)
   }
 
-  const isMax = (style.width == "99.9vw" && style.height == (window.innerHeight-1) + "px")
+  const isMax = (style.width == "99.9vw" && style.height == (window.innerHeight - 1) + "px")
     ?
-      true
+    true
     :
-     false;
+    false;
 
   "calc(" + style.height + "+1px)"
   return (
     // the whole body
     <div
-    key={"appSim" + appInfo.id}
-    ref={draggableRef}
-    onLoad={() => {desktop.activeApp(appInfo.id)}}
-    style={{ ...style, zIndex: desktop.getZindex(appInfo.id) }}
-    className={` ${cn("rounded bg-black", className)} ${isMax ? "" : "cut-edge-app"} ${desktop.getAppStatus(appInfo.id) !== "open" ? "hidden" : ""}`}
-    onMouseDown={() => { desktop.activeApp(appInfo.id)}}
->
-  {/* resizer */}
-    <Resizable
-      size={{ height: style.height}}
-      onResize={handleResize}
-      className="overflow-hidden relative"
+      key={"appSim" + appInfo.id}
+      ref={draggableRef}
+      onLoad={() => { desktop.activeApp(appInfo.id) }}
+      style={{ ...style, zIndex: desktop.getZindex(appInfo.id) }}
+      className={` ${cn("rounded bg-black", className)} ${isMax ? "" : "cut-edge-app"} ${desktop.getAppStatus(appInfo.id) !== "open" ? "hidden" : ""}`}
+      onMouseDown={() => { desktop.activeApp(appInfo.id) }}
     >
-      {/* Activator of the drag event */}
-      <div
-        ref={activator}
-        className={`${isMax ? "" : "cut-edge-tl"} ps-10 p-2 rounded-t bg-gray-600 flex justify-between ${isDragging ? "cursor-grabbing" : "cursor-grab"}`}
+      {/* resizer */}
+      <Resizable
+        size={{ height: style.height }}
+        onResize={handleResize}
+        className="overflow-hidden relative"
       >
-        <span>{appInfo.appName}</span>
-        <span className="flex gap-2">
-          <Minus className="cursor-pointer" onClick={hideApp}/>
-          <Square className="cursor-pointer" onClick={() => {
-            if(isMax) {
-              handleLessSize()
-            }else{
-              handleMaxSize()
-            }
-          }}/>
-          <X className="cursor-pointer" onClick={closeApp}/>
-        </span>
-      </div>
-      {/* body */}
-      <ScrollArea ref={body} style={{height: innerHeight}} >
-        {children}
-      </ScrollArea>
-    </Resizable>
-  </div>)
+        {/* Activator of the drag event */}
+        <div
+          ref={activator}
+          className={`${isMax ? "" : "cut-edge-tl"} ps-10 p-2 rounded-t bg-gray-600 flex justify-between ${isDragging ? "cursor-grabbing" : "cursor-grab"}`}
+        >
+          <span>{appInfo.appName}</span>
+          <span className="flex gap-2">
+            <Minus className="cursor-pointer" onClick={hideApp} />
+            <Square className="cursor-pointer" onClick={() => {
+              if (isMax) {
+                handleLessSize()
+              } else {
+                handleMaxSize()
+              }
+            }} />
+            <X className="cursor-pointer" onClick={closeApp} />
+          </span>
+        </div>
+        {/* body */}
+        <ScrollArea ref={body} style={{ height: innerHeight }} >
+          {children}
+        </ScrollArea>
+      </Resizable>
+    </div>)
 }

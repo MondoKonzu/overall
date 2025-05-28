@@ -1,7 +1,7 @@
 import { App } from "@/components/ui/applicationsim";
 import { fetchBuilidingType, fetchCampaignPending, fetchCampaignPlayers, fetchSizes } from "@/lib/data-fetcher";
 import {ModifyPlayer, PendingHandler} from "../playerHandler";
-import DesktopSim from "@/components/ui/desktop";
+import DesktopSim, { BuildingAppIcon, PartyAppIcon } from "@/components/ui/desktop";
 import Tabs from "@/components/tabs";
 import FormBuilding from "@/components/formBuildings";
 import BuildingHandler from "../building";
@@ -20,7 +20,7 @@ export const DM = async ({ campID }: { campID: string }) => {
             <CampaignProvider campID={campID}>
             <DesktopSim>
                 <App appInfo={{
-                    icon: "/spugna.png",
+                    icon: <PartyAppIcon/>,
                     appName: "Party", status: "close", id: "1"
                 }}
                     set={{ width: "fit-content", height: "40vh" }}
@@ -57,7 +57,7 @@ export const DM = async ({ campID }: { campID: string }) => {
                     </Tabs>
                 </App>
                 <App appInfo={{
-                    icon: "/spugna.png",
+                    icon: <BuildingAppIcon/>,
                     appName: "Buildings", status: "close", id: "2"
                 }}
                     set={{ width: "50vw", height: "75vh", position: {x:10, y:10}}}

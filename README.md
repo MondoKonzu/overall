@@ -7,9 +7,6 @@ Maybe when I'll get better skills I'll build it better.
 
 you know I have many **skill issues**
 
-## Random Try  
-This time the project does `something!!!`
-
 ## To run on docker (keeping the CLI active)  
 docker run -it -v ./:/overall --rm node:latest bash  
 cd /overall  
